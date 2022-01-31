@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, updateUserState } from "../redux/slices/userSlice";
 import { useRouter } from "next/router";
 import { auth, db } from "../firebase/firebase";
 
-const Auth = ({ children }: any) => {
+const useAuth = ({ children }: any) => {
   const dispatch = useDispatch();
   const user = useSelector(getUser).user;
   const router = useRouter();
@@ -47,4 +47,4 @@ const Auth = ({ children }: any) => {
 
   return children;
 };
-export default Auth;
+export default useAuth;

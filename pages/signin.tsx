@@ -12,6 +12,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../redux/slices/userSlice";
 
 function Copyright(props: any) {
   return (
@@ -34,9 +36,21 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const dispatch = useDispatch();
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const email = data.get("email") as string;
+    const password = data.get("password") as string;
+
+    const emailandpassword = {
+      email: email,
+      password: password,
+    };
+
+    dispatch(fetchUser(emailandpassword));
+
     // eslint-disable-next-line no-console
     console.log({
       email: data.get("email"),
