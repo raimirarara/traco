@@ -9,6 +9,7 @@ export type userState = {
     username: string;
     email: string;
     isSignedIn: boolean;
+    country: string;
     image: {
       id: string;
       path: string;
@@ -22,6 +23,7 @@ export const initialState: userState = {
     username: "",
     email: "",
     isSignedIn: false,
+    country: "",
     image: {
       id: "",
       path: "",
@@ -39,6 +41,35 @@ export type adduser = {
   email: string;
   password: string;
 };
+
+export type EditCountry = {
+  uid: string;
+  country: string;
+};
+
+export const editCounrty = createAsyncThunk(
+  "user/editCounrty",
+  async (editcountry: EditCountry) => {
+    const { uid, country } = editcountry;
+    console.log(country);
+    await db.collection("users").doc(uid).update({ country: country });
+    const data: any = await (
+      await db.collection("users").doc(uid).get()
+    ).data();
+
+    return {
+      uid: uid,
+      username: data.username,
+      email: data.email,
+      isSignedIn: true,
+      country: data.country,
+      image: {
+        id: data.image.id,
+        path: data.image.path,
+      },
+    };
+  }
+);
 
 export const signOutUser = createAsyncThunk("user/signOutUser", async () => {
   auth.signOut();
@@ -65,6 +96,7 @@ export const addUser = createAsyncThunk(
         uid: uid,
         updated_at: timestamp,
         username: username,
+        country: "",
         image: {
           id: "",
           path: "",
@@ -105,6 +137,7 @@ export const fetchUser = createAsyncThunk(
       username: data.username,
       email: data.email,
       isSignedIn: true,
+      country: data.country,
       image: {
         id: data.image.id,
         path: data.image.path,
@@ -142,6 +175,9 @@ const userSlice = createSlice({
       state.user = action.payload;
       alert("サインアウトしました。");
       Router.push("/");
+    });
+    builder.addCase(editCounrty.fulfilled, (state, action: any) => {
+      state.user = action.payload;
     });
   },
 });

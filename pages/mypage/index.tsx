@@ -1,9 +1,12 @@
 import { Box, Button, Typography } from "@mui/material";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, signOutUser } from "../redux/slices/userSlice";
+import { getUser, signOutUser } from "../../redux/slices/userSlice";
 
 export default function MyPage() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const user = useSelector(getUser).user;
 
   return (
@@ -23,6 +26,20 @@ export default function MyPage() {
       <Typography align="center" variant="h6">
         {user.email}
       </Typography>
+      <Typography color={"primary"} align="center" variant="h5" mt={4}>
+        国
+      </Typography>
+      <Typography align="center" variant="h6">
+        {user.country}
+      </Typography>
+      <Button
+        className="absolute inset-x-0 bottom-20"
+        fullWidth
+        variant="outlined"
+        href="/mypage/edit"
+      >
+        Profile Edit
+      </Button>
       <Button
         className="absolute inset-x-0 bottom-10"
         fullWidth

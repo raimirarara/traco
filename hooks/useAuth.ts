@@ -29,6 +29,7 @@ const useAuth = ({ children }: any) => {
                     username: data.username,
                     isSignedIn: true,
                     email: data.email,
+                    country: data.country,
                     image: {
                       id: data.image.id,
                       path: data.image.path,
