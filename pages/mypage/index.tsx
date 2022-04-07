@@ -9,6 +9,10 @@ export default function MyPage() {
   const router = useRouter();
   const user = useSelector(getUser).user;
 
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   return (
     <Box>
       <Typography color={"primary"} align="center" variant="h5" mt={2}>
@@ -30,7 +34,7 @@ export default function MyPage() {
         国
       </Typography>
       <Typography align="center" variant="h6">
-        {user.country}
+        {user.countries && user.countries.map((country) => <p>{country}</p>)}
       </Typography>
       <Button
         className="absolute inset-x-0 bottom-20"

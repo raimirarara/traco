@@ -10,6 +10,8 @@ import AsiaSouthEast from "../public/image/asiasoutheast.png";
 import CountryButton from "../components/organizms/CountryButton";
 import { db } from "../firebase/firebase";
 import useCountryUsers from "../hooks/useCountryUsers";
+import { useSelector } from "react-redux";
+import { getUser } from "../redux/slices/userSlice";
 
 const Home: NextPage = () => {
   //APIKEYは""としていれば開発者モードで使えます
@@ -20,6 +22,7 @@ const Home: NextPage = () => {
   const [selectCountry, setSelectCountry] = useState("");
 
   const [countryUsers, setCountryUsers] = useState<string[]>([]);
+  const user = useSelector(getUser).user;
 
   useEffect(() => {
     console.log("selectCountry : ", selectCountry);
@@ -29,6 +32,10 @@ const Home: NextPage = () => {
     });
     console.log("countryUsers:", countryUsers);
   }, [selectCountry]);
+
+  useEffect(() => {
+    console.log(user);
+  });
 
   return (
     <div className="relative h-screen">
@@ -46,7 +53,7 @@ const Home: NextPage = () => {
       </Box>
       <Box>
         {countryUsers.map((user: string) => (
-          <Typography>{user}</Typography>
+          <Typography key={user}>{user}</Typography>
         ))}
       </Box>
 

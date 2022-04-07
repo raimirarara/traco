@@ -1,7 +1,8 @@
 import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editCounrty, getUser } from "../../redux/slices/userSlice";
+import MultiSelectCountries from "../../components/organizms/MultiSelectCountries";
+import { editCountries, getUser } from "../../redux/slices/userSlice";
 
 const countries = [
   {
@@ -37,12 +38,15 @@ export default function ProfileEdit() {
   const dispatch = useDispatch();
   const user = useSelector(getUser).user;
 
-  const [country, setCountry] = useState(user.country);
+  const [selectCountries, setSelectCountries] = useState<string[]>([]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCountry(event.target.value);
-    dispatch(editCounrty({ uid: user.uid, country: event.target.value }));
+  const handleChange = (countries: string[]) => {
+    dispatch(editCountries({ uid: user.uid, countries: countries }));
   };
+
+  useEffect(() => {
+    console.log(user);
+  });
   return (
     <Box>
       <Typography color={"primary"} align="center" variant="h5" mt={2}>
@@ -60,20 +64,20 @@ export default function ProfileEdit() {
       <Typography align="center" variant="h6">
         {user.email}
       </Typography>
-      <TextField
-        id="select-country"
-        select
-        label="Country"
-        value={country}
-        onChange={handleChange}
-        helperText="Please select your country"
+
+      <MultiSelectCountries
+        selectCountries={selectCountries}
+        setSelectCountries={setSelectCountries}
+        defaultValue={user.countries}
+      />
+      <Button
+        className="absolute inset-x-0 bottom-20"
+        fullWidth
+        variant="outlined"
+        onClick={() => handleChange(selectCountries)}
       >
-        {countries.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.value}
-          </MenuItem>
-        ))}
-      </TextField>
+        UPDATE
+      </Button>
       <Button
         className="absolute inset-x-0 bottom-10"
         fullWidth

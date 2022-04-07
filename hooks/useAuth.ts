@@ -11,7 +11,9 @@ const useAuth = ({ children }: any) => {
 
   useEffect(() => {
     if (router.pathname != "/signup") {
-      if (!user.isSignedIn /*reduxのStateがfalseならば */) {
+      if (
+        !user.isSignedIn /*reduxのStateがfalseならば (今のところ、Reduxは更新するとfalseになるので、更新すると下記を通る)*/
+      ) {
         // updateStateUser(user);
         /* firebaseでログインしているかどうか調べてして,いなければsigninに返す関数 */
         auth.onAuthStateChanged(async (user) => {
@@ -29,7 +31,7 @@ const useAuth = ({ children }: any) => {
                     username: data.username,
                     isSignedIn: true,
                     email: data.email,
-                    country: data.country,
+                    countries: data.countries,
                     image: {
                       id: data.image.id,
                       path: data.image.path,

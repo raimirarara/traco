@@ -9,7 +9,7 @@ export type userState = {
     username: string;
     email: string;
     isSignedIn: boolean;
-    country: string;
+    countries: string[];
     image: {
       id: string;
       path: string;
@@ -23,7 +23,7 @@ export const initialState: userState = {
     username: "",
     email: "",
     isSignedIn: false,
-    country: "",
+    countries: [],
     image: {
       id: "",
       path: "",
@@ -42,17 +42,17 @@ export type adduser = {
   password: string;
 };
 
-export type EditCountry = {
+export type EditCountries = {
   uid: string;
-  country: string;
+  countries: string[];
 };
 
-export const editCounrty = createAsyncThunk(
-  "user/editCounrty",
-  async (editcountry: EditCountry) => {
-    const { uid, country } = editcountry;
-    console.log(country);
-    await db.collection("users").doc(uid).update({ country: country });
+export const editCountries = createAsyncThunk(
+  "user/editCountries",
+  async (editcountries: EditCountries) => {
+    const { uid, countries } = editcountries;
+    console.log(countries);
+    await db.collection("users").doc(uid).update({ countries: countries });
     const data: any = await (
       await db.collection("users").doc(uid).get()
     ).data();
@@ -62,7 +62,7 @@ export const editCounrty = createAsyncThunk(
       username: data.username,
       email: data.email,
       isSignedIn: true,
-      country: data.country,
+      countries: countries,
       image: {
         id: data.image.id,
         path: data.image.path,
@@ -96,7 +96,7 @@ export const addUser = createAsyncThunk(
         uid: uid,
         updated_at: timestamp,
         username: username,
-        country: "",
+        countries: [],
         image: {
           id: "",
           path: "",
@@ -137,7 +137,7 @@ export const fetchUser = createAsyncThunk(
       username: data.username,
       email: data.email,
       isSignedIn: true,
-      country: data.country,
+      countries: data.countries,
       image: {
         id: data.image.id,
         path: data.image.path,
@@ -176,8 +176,9 @@ const userSlice = createSlice({
       alert("サインアウトしました。");
       Router.push("/");
     });
-    builder.addCase(editCounrty.fulfilled, (state, action: any) => {
+    builder.addCase(editCountries.fulfilled, (state, action: any) => {
       state.user = action.payload;
+      console.log(state.user);
     });
   },
 });
