@@ -46,7 +46,9 @@ export default function ProfileEdit() {
 
   useEffect(() => {
     console.log(user);
-  });
+    setSelectCountries(user.countries);
+  }, [user]);
+
   return (
     <Box>
       <Typography color={"primary"} align="center" variant="h5" mt={2}>
@@ -68,7 +70,6 @@ export default function ProfileEdit() {
       <MultiSelectCountries
         selectCountries={selectCountries}
         setSelectCountries={setSelectCountries}
-        defaultValue={user.countries}
       />
       <Button
         className="absolute inset-x-0 bottom-20"

@@ -49,7 +49,6 @@ const countries = [
 type Props = {
   selectCountries: string[];
   setSelectCountries: React.Dispatch<React.SetStateAction<string[]>>;
-  defaultValue: string[];
 };
 
 export default function MultiSelectCountries(props: Props) {
@@ -65,6 +64,10 @@ export default function MultiSelectCountries(props: Props) {
     );
   };
 
+  React.useEffect(() => {
+    console.log(props.selectCountries);
+  }, [props.selectCountries]);
+
   return (
     <div className={"flex justify-center mt-16"}>
       <FormControl sx={{ m: 1, width: 300 }}>
@@ -77,7 +80,6 @@ export default function MultiSelectCountries(props: Props) {
           onChange={handleChange}
           input={<OutlinedInput label="Name" />}
           MenuProps={MenuProps}
-          defaultValue={props.defaultValue} // 反応しない！！！
         >
           {countries.map((option) => (
             <MenuItem key={option.value} value={option.value}>
