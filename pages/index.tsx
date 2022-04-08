@@ -33,10 +33,6 @@ const Home: NextPage = () => {
     console.log("countryUsers:", countryUsers);
   }, [selectCountry]);
 
-  useEffect(() => {
-    console.log(user);
-  });
-
   return (
     <div className="relative h-screen">
       <Head>

@@ -4,7 +4,7 @@ const useCountryUsers = async (selectCountry: string) => {
   const countryUsers: string[] = [];
   await db
     .collection("users")
-    .where("country", "==", selectCountry)
+    .where("countries", "array-contains", selectCountry)
     .get()
     .then((snapShot) => {
       snapShot.forEach((doc) => {
