@@ -36,6 +36,7 @@ const useAuth = ({ children }: any) => {
                       id: data.image.id,
                       path: data.image.path,
                     },
+                    chatRooms: data.chatRooms,
                   })
                 );
               });

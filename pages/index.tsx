@@ -10,19 +10,48 @@ import AsiaSouthEast from "../public/image/asiasoutheast.png";
 import CountryButton from "../components/organizms/CountryButton";
 import { db } from "../firebase/firebase";
 import useCountryUsers from "../hooks/useCountryUsers";
-import { useSelector } from "react-redux";
-import { getUser } from "../redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addChatRoomId, getUser } from "../redux/slices/userSlice";
+import useGetUidFromName from "../hooks/useGetUidFromName";
+import { useRouter } from "next/router";
+import useMakeChatRoom from "../hooks/useMakeChatRoom";
 
 const Home: NextPage = () => {
   //APIKEYは""としていれば開発者モードで使えます
   const APIKEY = "";
   const [center, setCenter] = useState({ lat: 50, lng: 50 });
   const [zoom, setZoom] = useState(3);
+  const router = useRouter();
+  const dispatch = useDispatch();
 
   const [selectCountry, setSelectCountry] = useState("");
 
   const [countryUsers, setCountryUsers] = useState<string[]>([]);
   const user = useSelector(getUser).user;
+
+  async function startChat(chatPartnerName: string): Promise<void> {
+    const chatPartnerUid: string = await useGetUidFromName(chatPartnerName);
+    let validFlag = false;
+    user.chatRooms.forEach(async (chatRoom) => {
+      if (chatRoom.chatPartnerUid == chatPartnerUid) {
+        validFlag = true;
+        console.log("すでにchatroomが存在していました。");
+        router.push("/chat/" + chatRoom.chatRoomId);
+      }
+    });
+    if (!validFlag) {
+      const chatRoomId: string = await useMakeChatRoom();
+      console.log(chatPartnerUid);
+      await dispatch(
+        addChatRoomId({
+          uid: user.uid,
+          chatPartnerUid: chatPartnerUid,
+          chatRoomId: chatRoomId,
+        })
+      );
+      router.push("/chat/" + chatRoomId);
+    }
+  }
 
   useEffect(() => {
     console.log("selectCountry : ", selectCountry);
@@ -48,8 +77,10 @@ const Home: NextPage = () => {
         <Image src={AsiaSouthEast} />
       </Box>
       <Box>
-        {countryUsers.map((user: string) => (
-          <Typography key={user}>{user}</Typography>
+        {countryUsers.map((username: string) => (
+          <Button key={username} onClick={() => startChat(username)} fullWidth>
+            {username}
+          </Button>
         ))}
       </Box>
 

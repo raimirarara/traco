@@ -1,7 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import Router from "next/router";
-import { auth, db, FirebaseTimestamp } from "../../firebase/firebase";
+import {
+  auth,
+  db,
+  FirebaseFieldValue,
+  FirebaseTimestamp,
+} from "../../firebase/firebase";
+import useGetUidFromName from "../../hooks/useGetUidFromName";
 
 export type userState = {
   user: {
@@ -14,6 +20,7 @@ export type userState = {
       id: string;
       path: string;
     };
+    chatRooms: { chatRoomId: string; chatPartnerUid: string }[];
   };
 };
 
@@ -28,6 +35,7 @@ export const initialState: userState = {
       id: "",
       path: "",
     },
+    chatRooms: [],
   },
 };
 
@@ -46,6 +54,56 @@ export type EditCountries = {
   uid: string;
   countries: string[];
 };
+
+export type AddChatRoomId = {
+  uid: string;
+  chatPartnerUid: string;
+  chatRoomId: string;
+};
+
+export const addChatRoomId = createAsyncThunk(
+  "user/addChatRoomId",
+  async (addchatroomId: AddChatRoomId) => {
+    const { uid, chatPartnerUid, chatRoomId } = addchatroomId;
+
+    // userのchatRoomsにroomIdを追加
+    await db
+      .collection("users")
+      .doc(uid)
+      .update({
+        chatRooms: FirebaseFieldValue.arrayUnion({
+          chatRoomId: chatRoomId,
+          chatPartnerUid: chatPartnerUid,
+        }),
+      });
+    await db
+      .collection("users")
+      .doc(chatPartnerUid)
+      .update({
+        chatRooms: FirebaseFieldValue.arrayUnion({
+          chatRoomId: chatRoomId,
+          chatPartnerUid: uid,
+        }),
+      });
+
+    const data: any = await (
+      await db.collection("users").doc(uid).get()
+    ).data();
+
+    return {
+      uid: uid,
+      username: data.username,
+      email: data.email,
+      isSignedIn: true,
+      countries: data.countries,
+      image: {
+        id: data.image.id,
+        path: data.image.path,
+      },
+      chatRooms: data.chatRooms,
+    };
+  }
+);
 
 export const editCountries = createAsyncThunk(
   "user/editCountries",
@@ -67,6 +125,7 @@ export const editCountries = createAsyncThunk(
         id: data.image.id,
         path: data.image.path,
       },
+      chatRooms: data.chatRooms,
     };
   }
 );
@@ -101,6 +160,7 @@ export const addUser = createAsyncThunk(
           id: "",
           path: "",
         },
+        chatRooms: [],
       };
 
       await db.collection("users").doc(uid).set(userInitialData);
@@ -142,6 +202,7 @@ export const fetchUser = createAsyncThunk(
         id: data.image.id,
         path: data.image.path,
       },
+      chatRooms: data.chatRooms,
     };
   }
 );
@@ -179,6 +240,13 @@ const userSlice = createSlice({
     builder.addCase(editCountries.fulfilled, (state, action: any) => {
       state.user = action.payload;
       console.log(state.user);
+    });
+    builder.addCase(addChatRoomId.fulfilled, (state, action: any) => {
+      state.user = action.payload;
+      console.log(state.user);
+    });
+    builder.addCase(addChatRoomId.rejected, (state, action: any) => {
+      console.log(action.error);
     });
   },
 });
