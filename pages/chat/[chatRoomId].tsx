@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import { db } from "../../firebase/firebase";
 import useGetUserData from "../../hooks/useGetUserData";
 import useSendText from "../../hooks/useSendText";
 import { getUser } from "../../redux/slices/userSlice";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 export type PertnerUser = {
   uid: string;
@@ -42,9 +43,23 @@ export default function ChatRoomId() {
     <>
       {partnerUser ? (
         <Box>
-          <Typography color={"primary"} align="center" variant="h5" mt={2}>
-            {partnerUser.username}
-          </Typography>
+          <Box height={40} className="flex shadow-md bg-blue-50">
+            <div className="w-16 flex justify-center my-auto">
+              <IconButton onClick={() => router.push("/favorite")}>
+                <ArrowBackIosNewIcon color={"primary"} />
+              </IconButton>
+            </div>
+            <Typography
+              width={390}
+              color={"primary"}
+              textAlign="center"
+              variant="h5"
+              marginY={"auto"}
+            >
+              {partnerUser.username}
+            </Typography>
+            <div className="w-16" />
+          </Box>
           <ChatArea
             roomId={router.query.chatRoomId as string}
             currentUser={{ name: user.username, image: user.image }}

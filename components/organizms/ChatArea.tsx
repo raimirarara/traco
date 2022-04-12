@@ -66,7 +66,7 @@ export default function ChatArea(props: Props) {
   }, []);
 
   return (
-    <Box height={630} className="overflow-scroll">
+    <Box height={640} className="overflow-scroll">
       {logs.map((log) =>
         log.name == props.currentUser.name ? (
           <div className="flex">
