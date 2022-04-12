@@ -4,7 +4,21 @@ import TextField from "@mui/material/TextField";
 import SendIcon from "@mui/icons-material/Send";
 import { IconButton } from "@mui/material";
 
-export default function MessageField() {
+type Props = {
+  roomId: string;
+  name: string;
+  sendText: (roomId: string, name: string, content: string) => Promise<void>;
+};
+
+export default function MessageField(props: Props) {
+  const [value, setValue] = React.useState<string>("");
+
+  const inputText = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setValue(e.target.value);
+  };
+
   return (
     <Box
       component="form"
@@ -20,9 +34,13 @@ export default function MessageField() {
           label="メッセージを入力"
           variant="filled"
           fullWidth
-          value={"aa"}
+          value={value}
+          onChange={(e) => inputText(e)}
         />
-        <IconButton color={"primary"}>
+        <IconButton
+          color={"primary"}
+          onClick={() => props.sendText(props.roomId, props.name, value)}
+        >
           <SendIcon />
         </IconButton>
       </div>
