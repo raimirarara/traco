@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { db } from "../../firebase/firebase";
 import firebase from "firebase/compat/app";
 import Image from "next/image";
@@ -20,6 +20,7 @@ type Props = {
 
 export default function ChatArea(props: Props) {
   const [logs, setLogs] = useState<firebase.firestore.DocumentData[]>([]);
+  const scrollBottomRef = useRef<HTMLDivElement>(null);
 
   const addLog = (id: string, data: any) => {
     const log = {
@@ -38,6 +39,7 @@ export default function ChatArea(props: Props) {
         ("0" + data.created_at.toDate().getMinutes()).slice(-2),
     };
     setLogs((prev) => [...prev, log]);
+    scrollBottomRef?.current?.scrollIntoView();
   };
 
   useEffect(() => {
@@ -62,11 +64,11 @@ export default function ChatArea(props: Props) {
       });
 
     // Stop listening to changes
-    () => unsubscribe();
+    return () => unsubscribe();
   }, []);
 
   return (
-    <Box height={640} className="overflow-scroll">
+    <Box height={640} className=" overflow-scroll">
       {logs.map((log) =>
         log.name == props.currentUser.name ? (
           <div className="flex">
@@ -105,6 +107,7 @@ export default function ChatArea(props: Props) {
           </div>
         )
       )}
+      <div ref={scrollBottomRef} />
     </Box>
   );
 }

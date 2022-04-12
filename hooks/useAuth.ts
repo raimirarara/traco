@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, updateUserState } from "../redux/slices/userSlice";
 import { useRouter } from "next/router";
@@ -48,7 +48,6 @@ const useAuth = ({ children }: any) => {
       // reduxのstateがリロードされてfalseになったのをもとに戻す。
     }
   }, [user]);
-
   return children;
 };
 export default useAuth;

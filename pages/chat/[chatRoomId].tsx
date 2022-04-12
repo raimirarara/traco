@@ -42,8 +42,8 @@ export default function ChatRoomId() {
   return (
     <>
       {partnerUser ? (
-        <Box>
-          <Box height={40} className="flex shadow-md bg-blue-50">
+        <div>
+          <div className="flex shadow-md bg-blue-50">
             <div className="w-16 flex justify-center my-auto">
               <IconButton onClick={() => router.push("/favorite")}>
                 <ArrowBackIosNewIcon color={"primary"} />
@@ -59,7 +59,7 @@ export default function ChatRoomId() {
               {partnerUser.username}
             </Typography>
             <div className="w-16" />
-          </Box>
+          </div>
           <ChatArea
             roomId={router.query.chatRoomId as string}
             currentUser={{ name: user.username, image: user.image }}
@@ -72,7 +72,7 @@ export default function ChatRoomId() {
               sendText={useSendText}
             />
           </div>
-        </Box>
+        </div>
       ) : (
         <Box>しばらくお待ち下さい</Box>
       )}
