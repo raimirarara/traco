@@ -6,7 +6,7 @@ export default async function useMakeChatRoom(): Promise<string> {
 
   const initialChatRoom = {
     chatRoomId: chatRoomRef.id,
-    messages: {},
+    messages: [],
     created_at: timestamp,
   };
 
