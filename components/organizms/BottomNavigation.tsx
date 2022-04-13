@@ -11,7 +11,13 @@ export default function SimpleBottomNavigation() {
   const router = useRouter();
 
   const [value, setValue] = React.useState(
-    router.pathname == "/" ? 1 : router.pathname == "/mypage" ? 2 : 0
+    router.pathname == "/"
+      ? 1
+      : router.pathname == "/mypage"
+      ? 2
+      : router.pathname == "/talk"
+      ? 0
+      : null
   );
 
   return (

@@ -234,8 +234,8 @@ const userSlice = createSlice({
     });
     builder.addCase(signOutUser.fulfilled, (state, action: any) => {
       state.user = action.payload;
-      alert("サインアウトしました。");
-      Router.push("/");
+      alert("ログアウトしました。");
+      Router.push("/signin");
     });
     builder.addCase(editCountries.fulfilled, (state, action: any) => {
       state.user = action.payload;

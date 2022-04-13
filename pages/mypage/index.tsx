@@ -1,9 +1,11 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, IconButton, MenuList, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SimpleBottomNavigation from "../../components/organizms/BottomNavigation";
 import { getUser, signOutUser } from "../../redux/slices/userSlice";
+import MenuIcon from "@mui/icons-material/Menu";
+import MenuListComposition from "../../components/organizms/MenuListComposition";
 
 export default function MyPage() {
   const dispatch = useDispatch();
@@ -17,9 +19,20 @@ export default function MyPage() {
   return (
     <div className="h-screen">
       <Box height={680}>
-        <Typography color={"primary"} align="center" variant="h5" pt={2}>
-          マイページ
-        </Typography>
+        <div className="flex">
+          <Box width={"20%"} />
+          <Box width={"60%"}>
+            <Typography color={"primary"} align="center" variant="h5" pt={2}>
+              マイページ
+            </Typography>
+          </Box>
+          <Box className={"flex justify-end"} width={"20%"} pt={1} pr={2}>
+            {/* <IconButton>
+              <MenuIcon />
+            </IconButton> */}
+            <MenuListComposition />
+          </Box>
+        </div>
         <Typography color={"primary"} align="center" variant="h5" mt={4}>
           現在ログインしているユーザー
         </Typography>
