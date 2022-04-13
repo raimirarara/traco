@@ -45,7 +45,7 @@ export default function ChatRoomId() {
         <div>
           <div className="flex shadow-md bg-blue-50">
             <div className="w-16 flex justify-center my-auto">
-              <IconButton onClick={() => router.push("/favorite")}>
+              <IconButton onClick={() => router.push("/talk")}>
                 <ArrowBackIosNewIcon color={"primary"} />
               </IconButton>
             </div>

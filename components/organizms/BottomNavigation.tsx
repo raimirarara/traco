@@ -3,13 +3,16 @@ import Box from "@mui/material/Box";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import SearchIcon from "@mui/icons-material/Search";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import ChatIcon from "@mui/icons-material/Chat";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/router";
 
 export default function SimpleBottomNavigation() {
-  const [value, setValue] = React.useState(1);
   const router = useRouter();
+
+  const [value, setValue] = React.useState(
+    router.pathname == "/" ? 1 : router.pathname == "/mypage" ? 2 : 0
+  );
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -21,9 +24,9 @@ export default function SimpleBottomNavigation() {
         }}
       >
         <BottomNavigationAction
-          label="Favorite"
-          icon={<FavoriteIcon />}
-          onClick={() => router.push("/favorite")}
+          label="Talk"
+          icon={<ChatIcon />}
+          onClick={() => router.push("/talk")}
         />
         <BottomNavigationAction
           label="Search"
