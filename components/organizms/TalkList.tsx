@@ -7,27 +7,34 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { TalkLists } from "../../hooks/useMakeTalkLists";
+import { useRouter } from "next/router";
 
 type Props = {
   talkLists: TalkLists;
 };
 
 export default function TalkList(props: Props) {
+  const router = useRouter();
+
   return (
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       {props.talkLists.map((talkList) => (
         <>
-          <ListItem alignItems="flex-start">
+          <ListItem
+            alignItems="flex-start"
+            onClick={() => router.push("/chat/" + talkList.chatRoomId)}
+          >
             <ListItemAvatar>
               <Avatar
                 alt={talkList.username}
                 // src="/static/images/avatar/1.jpg"
               />
             </ListItemAvatar>
-            <React.Fragment>
-              <ListItemText
-                primary={talkList.username}
-                secondary={
+
+            <ListItemText
+              primary={talkList.username}
+              secondary={
+                <React.Fragment>
                   <Typography
                     sx={{ display: "inline" }}
                     component="span"
@@ -36,10 +43,10 @@ export default function TalkList(props: Props) {
                   >
                     {talkList.latestTalk.name}
                   </Typography>
-                }
-              />
-              {talkList.latestTalk.content}
-            </React.Fragment>
+                  {" — " + talkList.latestTalk.content}
+                </React.Fragment>
+              }
+            />
           </ListItem>
           <Divider variant="inset" component="li" />
         </>

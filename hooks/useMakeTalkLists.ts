@@ -2,6 +2,7 @@ import { db, FirebaseTimestamp } from "../firebase/firebase";
 import useGetUserData from "./useGetUserData";
 
 export type TalkLists = {
+  chatRoomId: string;
   username: string;
   image: {
     id: string;
@@ -35,6 +36,7 @@ export default function useMakeTalkLists(
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           talkLists.push({
+            chatRoomId: chatRoom.chatRoomId,
             username: pertnerUserData.username,
             image: pertnerUserData.image,
             latestTalk: {
