@@ -9,19 +9,19 @@ import Typography from "@mui/material/Typography";
 import { TalkLists } from "../../hooks/useMakeTalkLists";
 
 type Props = {
-  talkLists?: TalkLists;
+  talkLists: TalkLists;
 };
 
 export default function TalkList(props: Props) {
   return (
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-      {props.talkLists?.map((talkList) => (
+      {props.talkLists.map((talkList) => (
         <>
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
               <Avatar
                 alt={talkList.username}
-                src="/static/images/avatar/1.jpg"
+                // src="/static/images/avatar/1.jpg"
               />
             </ListItemAvatar>
             <React.Fragment>

@@ -14,16 +14,17 @@ export type TalkLists = {
   };
 }[];
 
-export default async function useMakeTalkLists(
+export default function useMakeTalkLists(
   chatRooms: {
     chatRoomId: string;
     chatPartnerUid: string;
   }[]
-): Promise<TalkLists> {
+): TalkLists {
   const talkLists: TalkLists = [];
 
   chatRooms.forEach(async (chatRoom) => {
     const pertnerUserData = await useGetUserData(chatRoom.chatPartnerUid);
+    console.log("Get userData!!");
     await db
       .collection("chatrooms")
       .doc(chatRoom.chatRoomId)
@@ -44,6 +45,7 @@ export default async function useMakeTalkLists(
           });
         });
       });
+    console.log("Get talkLists");
   });
 
   return talkLists;

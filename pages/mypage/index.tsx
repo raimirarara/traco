@@ -52,30 +52,7 @@ export default function MyPage() {
           {user.countries && user.countries.map((country) => <p>{country}</p>)}
         </Typography>
       </Box>
-      {/* <Button
-        className="absolute inset-x-0 bottom-20"
-        fullWidth
-        variant="outlined"
-        href="/mypage/edit"
-      >
-        Profile Edit
-      </Button>
-      <Button
-        className="absolute inset-x-0 bottom-10"
-        fullWidth
-        variant="outlined"
-        href="/"
-      >
-        Home
-      </Button>
-      <Button
-        className="absolute inset-x-0 bottom-0"
-        fullWidth
-        variant="outlined"
-        onClick={() => dispatch(signOutUser())}
-      >
-        Sign Out
-      </Button> */}
+
       <SimpleBottomNavigation />
     </div>
   );
