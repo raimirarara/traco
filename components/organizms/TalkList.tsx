@@ -19,7 +19,7 @@ export default function TalkList(props: Props) {
   return (
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       {props.talkLists.map((talkList) => (
-        <>
+        <div key={talkList.chatRoomId}>
           <ListItem
             alignItems="flex-start"
             onClick={() => router.push("/chat/" + talkList.chatRoomId)}
@@ -49,7 +49,7 @@ export default function TalkList(props: Props) {
             />
           </ListItem>
           <Divider variant="inset" component="li" />
-        </>
+        </div>
       ))}
     </List>
   );

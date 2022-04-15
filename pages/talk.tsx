@@ -11,13 +11,11 @@ export default function Talk() {
 
   const [talkLists, setTalkLists] = useState<TalkLists>([]);
 
-  async function makeTalkLists(talkLists: TalkLists) {
-    setTalkLists(talkLists);
-  }
-
   useEffect(() => {
-    const temp = useMakeTalkLists(user.chatRooms);
-    setTimeout(() => makeTalkLists(temp), 500); // 少し待たないと反映されない？？？？なぜ || typroのrankingのところもこれで苦労した
+    useMakeTalkLists(user.chatRooms).then((talkLists) => {
+      setTimeout(() => setTalkLists(talkLists), 300);
+      console.log(talkLists);
+    });
   }, [user]);
 
   return (

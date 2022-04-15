@@ -59,7 +59,6 @@ const Home: NextPage = () => {
     console.log("selectCountry : ", selectCountry);
     useCountryUsers(user.username, selectCountry).then((users) => {
       setCountryUsers(users);
-      console.log(users);
     });
     console.log("countryUsers:", countryUsers);
   }, [selectCountry]);

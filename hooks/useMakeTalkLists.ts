@@ -15,39 +15,40 @@ export type TalkLists = {
   };
 }[];
 
-export default function useMakeTalkLists(
+export default async function useMakeTalkLists(
   chatRooms: {
     chatRoomId: string;
     chatPartnerUid: string;
   }[]
-): TalkLists {
+): Promise<TalkLists> {
   const talkLists: TalkLists = [];
 
-  chatRooms.forEach(async (chatRoom) => {
-    const pertnerUserData = await useGetUserData(chatRoom.chatPartnerUid);
-    console.log("Get userData!!");
-    await db
-      .collection("chatrooms")
-      .doc(chatRoom.chatRoomId)
-      .collection("messages")
-      .orderBy("created_at", "desc")
-      .limit(1)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          talkLists.push({
-            chatRoomId: chatRoom.chatRoomId,
-            username: pertnerUserData.username,
-            image: pertnerUserData.image,
-            latestTalk: {
-              name: doc.data().name,
-              content: doc.data().content,
-              date: doc.data().created_at.toDate(),
-            },
+  await chatRooms.forEach((chatRoom) => {
+    useGetUserData(chatRoom.chatPartnerUid).then(async (partnerUserData) => {
+      console.log("get partnerUserData!!!");
+      await db
+        .collection("chatrooms")
+        .doc(chatRoom.chatRoomId)
+        .collection("messages")
+        .orderBy("created_at", "desc")
+        .limit(1)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            console.log("get latestTalkData!!!");
+            talkLists.push({
+              chatRoomId: chatRoom.chatRoomId,
+              username: partnerUserData.username,
+              image: partnerUserData.image,
+              latestTalk: {
+                name: doc.data().name,
+                content: doc.data().content,
+                date: doc.data().created_at.toDate(),
+              },
+            });
           });
         });
-      });
-    console.log("Get talkLists");
+    });
   });
 
   return talkLists;
