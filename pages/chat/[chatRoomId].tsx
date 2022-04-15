@@ -63,7 +63,7 @@ export default function ChatRoomId() {
             partnerUser={partnerUser}
           />
 
-          <div className="fixed w-full bottom-0">
+          <div className="bottom-0">
             <MessageField
               roomId={router.query.chatRoomId as string}
               name={user.username}

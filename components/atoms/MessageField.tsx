@@ -23,7 +23,7 @@ export default function MessageField(props: Props) {
     <Box
       component="form"
       sx={{
-        "& > :not(style)": { mt: 1, width: "100%" },
+        "& > :not(style)": { width: "100%" },
       }}
       noValidate
       autoComplete="off"
