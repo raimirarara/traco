@@ -32,7 +32,7 @@ export default function ProfileEdit() {
   }, [user]);
 
   return (
-    <Box>
+    <div className="min-h-screen">
       <Box height={680}>
         <Typography color={"primary"} align="center" variant="h5" pt={2}>
           Profile Edit
@@ -61,31 +61,9 @@ export default function ProfileEdit() {
           </IconButton>
         </Box>
       </Box>
-      {/* <Button
-        className="absolute inset-x-0 bottom-20"
-        fullWidth
-        variant="outlined"
-        onClick={() => handleChange(selectCountries)}
-      >
-        UPDATE
-      </Button>
-      <Button
-        className="absolute inset-x-0 bottom-10"
-        fullWidth
-        variant="outlined"
-        href="/mypage"
-      >
-        MyPage
-      </Button>
-      <Button
-        className="absolute inset-x-0 bottom-0"
-        fullWidth
-        variant="outlined"
-        href="/"
-      >
-        Home
-      </Button> */}
-      <SimpleBottomNavigation />
-    </Box>
+      <div className="w-full fixed bottom-0">
+        <SimpleBottomNavigation />
+      </div>
+    </div>
   );
 }
