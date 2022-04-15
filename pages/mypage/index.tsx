@@ -17,8 +17,8 @@ export default function MyPage() {
   }, [user]);
 
   return (
-    <div className="h-screen">
-      <Box height={680}>
+    <div className="min-h-screen">
+      <Box>
         <div className="flex">
           <Box width={"20%"} />
           <Box width={"60%"}>
@@ -53,7 +53,9 @@ export default function MyPage() {
           {user.countries && user.countries.map((country) => <p>{country}</p>)}
         </Typography>
       </Box>
-      <SimpleBottomNavigation />
+      <div className="w-full fixed bottom-0">
+        <SimpleBottomNavigation />
+      </div>
     </div>
   );
 }

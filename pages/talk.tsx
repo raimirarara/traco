@@ -21,7 +21,7 @@ export default function Talk() {
   }, [user]);
 
   return (
-    <Box>
+    <div className="min-h-screen">
       <Box height={680}>
         <Typography color={"primary"} align="center" variant="h5" pt={2}>
           Talk
@@ -29,7 +29,9 @@ export default function Talk() {
 
         <TalkList talkLists={talkLists} />
       </Box>
-      <SimpleBottomNavigation />
-    </Box>
+      <div className="w-full fixed bottom-0">
+        <SimpleBottomNavigation />
+      </div>
+    </div>
   );
 }
