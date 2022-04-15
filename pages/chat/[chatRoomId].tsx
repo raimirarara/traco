@@ -43,22 +43,18 @@ export default function ChatRoomId() {
     <>
       {partnerUser ? (
         <div className="min-h-screen">
-          <div className="flex shadow-md bg-blue-50">
-            <div className="w-16 flex justify-center my-auto">
+          <div className="w-full flex shadow-md bg-blue-50">
+            <div className="w-1/4 flex justify-center my-auto">
               <IconButton onClick={() => router.push("/talk")}>
                 <ArrowBackIosNewIcon color={"primary"} />
               </IconButton>
             </div>
-            <Typography
-              width={390}
-              color={"primary"}
-              textAlign="center"
-              variant="h5"
-              marginY={"auto"}
-            >
-              {partnerUser.username}
-            </Typography>
-            <div className="w-16" />
+            <div className="w-2/4 my-auto">
+              <Typography color={"primary"} textAlign="center" variant="h5">
+                {partnerUser.username}
+              </Typography>
+            </div>
+            <div className="w-1/4" />
           </div>
 
           <ChatArea

@@ -15,6 +15,7 @@ import { addChatRoomId, getUser } from "../redux/slices/userSlice";
 import useGetUidFromName from "../hooks/useGetUidFromName";
 import { useRouter } from "next/router";
 import useMakeChatRoom from "../hooks/useMakeChatRoom";
+import useGetWindowSize from "../hooks/useGetWindowSize";
 
 const Home: NextPage = () => {
   //APIKEYは""としていれば開発者モードで使えます
@@ -23,6 +24,7 @@ const Home: NextPage = () => {
   const [zoom, setZoom] = useState(3);
   const router = useRouter();
   const dispatch = useDispatch();
+  const { height, width } = useGetWindowSize();
 
   const [selectCountry, setSelectCountry] = useState("");
 
@@ -75,7 +77,7 @@ const Home: NextPage = () => {
             selectCountry={selectCountry}
             setSelectCountry={setSelectCountry}
           />
-          <Image src={AsiaSouthEast} layout="fixed" />
+          <Image width={600} height={701} src={AsiaSouthEast} layout="fixed" />
         </Box>
         <Box>
           {countryUsers.map((username: string) => (
