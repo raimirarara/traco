@@ -57,7 +57,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     console.log("selectCountry : ", selectCountry);
-    useCountryUsers(selectCountry).then((users) => {
+    useCountryUsers(user.username, selectCountry).then((users) => {
       setCountryUsers(users);
       console.log(users);
     });

@@ -1,6 +1,6 @@
 import { db } from "../firebase/firebase";
 
-const useCountryUsers = async (selectCountry: string) => {
+const useCountryUsers = async (myname: string, selectCountry: string) => {
   const countryUsers: string[] = [];
   await db
     .collection("users")
@@ -8,8 +8,9 @@ const useCountryUsers = async (selectCountry: string) => {
     .get()
     .then((snapShot) => {
       snapShot.forEach((doc) => {
-        countryUsers.push(doc.data().username);
-        console.log(countryUsers);
+        if (myname != doc.data().username) {
+          countryUsers.push(doc.data().username);
+        }
       });
     });
   return countryUsers;
