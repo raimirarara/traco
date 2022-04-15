@@ -23,3 +23,8 @@ a {
 * {
   box-sizing: border-box;
 }
+
+/* 反映されない */
+/* .chat-area {
+  min-height: calc(100vh - 96px);
+} */

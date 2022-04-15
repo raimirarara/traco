@@ -42,7 +42,7 @@ export default function ChatRoomId() {
   return (
     <>
       {partnerUser ? (
-        <div>
+        <div className="min-h-screen">
           <div className="flex shadow-md bg-blue-50">
             <div className="w-16 flex justify-center my-auto">
               <IconButton onClick={() => router.push("/talk")}>
@@ -60,12 +60,14 @@ export default function ChatRoomId() {
             </Typography>
             <div className="w-16" />
           </div>
+
           <ChatArea
             roomId={router.query.chatRoomId as string}
             currentUser={{ name: user.username, image: user.image }}
             partnerUser={partnerUser}
           />
-          <div className="absolute inset-x-0 bottom-0">
+
+          <div className="fixed w-full bottom-0">
             <MessageField
               roomId={router.query.chatRoomId as string}
               name={user.username}

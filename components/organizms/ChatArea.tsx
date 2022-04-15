@@ -5,6 +5,7 @@ import firebase from "firebase/compat/app";
 import Image from "next/image";
 import PersonIcon from "@mui/icons-material/Person";
 import { PertnerUser } from "../../pages/chat/[chatRoomId]";
+import useGetWindowSize from "../../hooks/useGetWindowSize";
 
 type Props = {
   currentUser: {
@@ -21,6 +22,7 @@ type Props = {
 export default function ChatArea(props: Props) {
   const [logs, setLogs] = useState<firebase.firestore.DocumentData[]>([]);
   const scrollBottomRef = useRef<HTMLDivElement>(null);
+  const { height, width } = useGetWindowSize();
 
   const addLog = (id: string, data: any) => {
     const log = {
@@ -68,7 +70,7 @@ export default function ChatArea(props: Props) {
   }, []);
 
   return (
-    <Box height={640} className=" overflow-scroll">
+    <Box height={height - 96} className={"overflow-scroll"}>
       {logs.map((log) =>
         log.name == props.currentUser.name ? (
           <div className="flex">
