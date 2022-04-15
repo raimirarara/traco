@@ -42,7 +42,7 @@ export default function ChatRoomId() {
   return (
     <>
       {partnerUser ? (
-        <div className="min-h-screen">
+        <div>
           <div className="w-full flex shadow-md bg-blue-50">
             <div className="w-1/4 flex justify-center my-auto">
               <IconButton onClick={() => router.push("/talk")}>

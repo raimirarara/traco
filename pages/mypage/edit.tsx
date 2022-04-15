@@ -32,7 +32,7 @@ export default function ProfileEdit() {
   }, [user]);
 
   return (
-    <div className="min-h-screen">
+    <div>
       <Box height={680}>
         <Typography color={"primary"} align="center" variant="h5" pt={2}>
           Profile Edit

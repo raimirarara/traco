@@ -65,7 +65,7 @@ const Home: NextPage = () => {
   }, [selectCountry]);
 
   return (
-    <div className="min-h-screen">
+    <div>
       <Box height={680}>
         <Head>
           <title>Traco</title>
