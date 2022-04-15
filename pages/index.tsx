@@ -77,7 +77,7 @@ const Home: NextPage = () => {
             selectCountry={selectCountry}
             setSelectCountry={setSelectCountry}
           />
-          <Image width={414} height={483} src={AsiaSouthEast} layout="fixed" />
+          <Image width={375} height={438} src={AsiaSouthEast} layout="fixed" />
         </Box>
         <Box>
           {countryUsers.map((username: string) => (
