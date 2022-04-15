@@ -50,14 +50,13 @@ export default function ProfileEdit() {
           {user.email}
         </Typography>
 
-        <MultiSelectCountries
-          selectCountries={selectCountries}
-          setSelectCountries={setSelectCountries}
-        />
-        <Box className="flex justify-end" pr={8}>
+        <Box sx={{ display: "flex", justifyContent: "center" }} mt={8}>
+          <MultiSelectCountries
+            selectCountries={selectCountries}
+            setSelectCountries={setSelectCountries}
+          />
           <IconButton onClick={() => handleChange(selectCountries)}>
             <DoneIcon />
-            {/* <Typography fontSize={14}>update</Typography> */}
           </IconButton>
         </Box>
       </Box>

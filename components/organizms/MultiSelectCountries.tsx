@@ -69,25 +69,23 @@ export default function MultiSelectCountries(props: Props) {
   }, [props.selectCountries]);
 
   return (
-    <div className={"flex justify-center mt-16"}>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-name-label">countries</InputLabel>
-        <Select
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
-          multiple
-          value={props.selectCountries}
-          onChange={handleChange}
-          input={<OutlinedInput label="Name" />}
-          MenuProps={MenuProps}
-        >
-          {countries.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.value}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+    <FormControl sx={{ m: 1, width: 300 }}>
+      <InputLabel id="demo-multiple-name-label">countries</InputLabel>
+      <Select
+        labelId="demo-multiple-name-label"
+        id="demo-multiple-name"
+        multiple
+        value={props.selectCountries}
+        onChange={handleChange}
+        input={<OutlinedInput label="Name" />}
+        MenuProps={MenuProps}
+      >
+        {countries.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.value}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 }
