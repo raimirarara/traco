@@ -33,7 +33,7 @@ export default function ProfileEdit() {
 
   return (
     <div>
-      <Box height={680}>
+      <Box>
         <Typography color={"primary"} align="center" variant="h5" pt={2}>
           Profile Edit
         </Typography>

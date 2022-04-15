@@ -22,7 +22,7 @@ export default function Talk() {
 
   return (
     <div>
-      <Box height={680}>
+      <Box>
         <Typography color={"primary"} align="center" variant="h5" pt={2}>
           Talk
         </Typography>
