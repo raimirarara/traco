@@ -22,7 +22,8 @@ export default function MyPage() {
         <div className="flex">
           <Box width={"20%"} />
           <Box width={"60%"}>
-            <Typography color={"primary"} align="center" variant="h5" pt={2}>
+            <Box height={16} />
+            <Typography color={"primary"} align="center" variant="h5">
               マイページ
             </Typography>
           </Box>
@@ -52,7 +53,6 @@ export default function MyPage() {
           {user.countries && user.countries.map((country) => <p>{country}</p>)}
         </Typography>
       </Box>
-
       <SimpleBottomNavigation />
     </div>
   );
