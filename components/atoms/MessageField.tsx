@@ -19,6 +19,11 @@ export default function MessageField(props: Props) {
     setValue(e.target.value);
   };
 
+  const handleClick = () => {
+    props.sendText(props.roomId, props.name, value);
+    setValue("");
+  };
+
   return (
     <Box
       component="form"
@@ -37,10 +42,7 @@ export default function MessageField(props: Props) {
           value={value}
           onChange={(e) => inputText(e)}
         />
-        <IconButton
-          color={"primary"}
-          onClick={() => props.sendText(props.roomId, props.name, value)}
-        >
+        <IconButton color={"primary"} onClick={handleClick}>
           <SendIcon />
         </IconButton>
       </div>

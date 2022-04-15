@@ -50,7 +50,8 @@ export default function MyPage() {
           国
         </Typography>
         <Typography align="center" variant="h6">
-          {user.countries && user.countries.map((country) => <p>{country}</p>)}
+          {user.countries &&
+            user.countries.map((country) => <p key={country}>{country}</p>)}
         </Typography>
       </Box>
       <div className="w-full fixed bottom-0">
