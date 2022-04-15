@@ -17,7 +17,7 @@ export default function MyPage() {
   }, [user]);
 
   return (
-    <div className="min-h-screen">
+    <div>
       <Box>
         <div className="flex">
           <Box width={"20%"} />
