@@ -14,7 +14,7 @@ export default function CountryButton(props: Props) {
   return (
     <>
       <Button
-        className="z-10 absolute top-20 left-56"
+        className="z-10 absolute top-20 left-56 fixed"
         variant="outlined"
         size="small"
         onClick={() => handleClick("韓国")}
@@ -46,7 +46,7 @@ export default function CountryButton(props: Props) {
         タイ
       </Button>
       <Button
-        className="z-10 absolute top-64 left-28"
+        className="z-10 absolute top-64 left-28 fixed"
         variant="outlined"
         size="small"
         onClick={() => handleClick("ベトナム")}
