@@ -13,6 +13,7 @@
     "@mui/base": "^5.0.0-alpha.75",
     "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.6",
+    "@mui/styles": "^5.6.1",
     "@reduxjs/toolkit": "^1.7.1",
     "firebase": "^9.6.5",
     "google-map-react": "^2.1.10",
