@@ -14,7 +14,7 @@ export default function CountryButton(props: Props) {
   return (
     <>
       <Button
-        className="z-10 absolute top-20 left-56"
+        sx={{ position: "absolute", zIndex: 1, top: "15%", left: "60%" }}
         variant="outlined"
         size="small"
         onClick={() => handleClick("韓国")}
@@ -22,7 +22,7 @@ export default function CountryButton(props: Props) {
         韓国
       </Button>
       <Button
-        className="z-10 absolute top-44 left-48"
+        sx={{ position: "absolute", zIndex: 1, top: "40%", left: "45%" }}
         variant="outlined"
         size="small"
         onClick={() => handleClick("台湾")}
@@ -30,7 +30,7 @@ export default function CountryButton(props: Props) {
         台湾
       </Button>
       <Button
-        className="z-10 absolute top-48 left-1"
+        sx={{ position: "absolute", zIndex: 1, top: "45%", left: "1%" }}
         variant="outlined"
         size="small"
         onClick={() => handleClick("ミャンマー")}
@@ -38,7 +38,7 @@ export default function CountryButton(props: Props) {
         ミャンマー
       </Button>
       <Button
-        className="z-10 absolute top-60 left-10"
+        sx={{ position: "absolute", zIndex: 1, top: "55%", left: "10%" }}
         variant="outlined"
         size="small"
         onClick={() => handleClick("タイ")}
@@ -46,7 +46,7 @@ export default function CountryButton(props: Props) {
         タイ
       </Button>
       <Button
-        className="z-10 top-64 left-28"
+        sx={{ position: "absolute", zIndex: 1, top: "50%", left: "28%" }}
         variant="outlined"
         size="small"
         onClick={() => handleClick("ベトナム")}
@@ -54,7 +54,7 @@ export default function CountryButton(props: Props) {
         ベトナム
       </Button>
       <Button
-        className="z-10 absolute top-80 left-10"
+        sx={{ position: "absolute", zIndex: 1, top: "65%", left: "10%" }}
         variant="outlined"
         size="small"
         onClick={() => handleClick("マレーシア")}
@@ -62,7 +62,7 @@ export default function CountryButton(props: Props) {
         マレーシア
       </Button>
       <Button
-        className="z-10 absolute bottom-24 left-12"
+        sx={{ position: "absolute", zIndex: 1, top: "73%", left: "12%" }}
         variant="outlined"
         size="small"
         onClick={() => handleClick("シンガポール")}
@@ -78,7 +78,7 @@ export default function CountryButton(props: Props) {
         フィリピン
       </Button>
       <Button
-        className="z-10 absolute bottom-16 left-44"
+        sx={{ position: "absolute", zIndex: 1, top: "85%", left: "40%" }}
         variant="outlined"
         size="small"
         onClick={() => handleClick("インドネシア")}
