@@ -6,6 +6,7 @@ import SimpleBottomNavigation from "../../components/organizms/BottomNavigation"
 import { getUser, signOutUser } from "../../redux/slices/userSlice";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuListComposition from "../../components/organizms/MenuListComposition";
+import Image from "next/image";
 
 export default function MyPage() {
   const dispatch = useDispatch();
@@ -37,12 +38,23 @@ export default function MyPage() {
         <Typography color={"primary"} align="center" variant="h5" mt={4}>
           現在ログインしているユーザー
         </Typography>
+        <Box sx={{ display: "flex", justifyContent: "center" }} my={2}>
+          {user.image.path && (
+            <Image
+              className="rounded-full"
+              width={50}
+              height={50}
+              src={user.image.path}
+            />
+          )}
+        </Box>
         <Typography align="center" variant="h6">
           {user.username}
         </Typography>
         <Typography color={"primary"} align="center" variant="h5" mt={4}>
           登録しているメールアドレス
         </Typography>
+
         <Typography align="center" variant="h6">
           {user.email}
         </Typography>

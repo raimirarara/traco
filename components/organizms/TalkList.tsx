@@ -25,10 +25,7 @@ export default function TalkList(props: Props) {
             onClick={() => router.push("/chat/" + talkList.chatRoomId)}
           >
             <ListItemAvatar>
-              <Avatar
-                alt={talkList.username}
-                // src="/static/images/avatar/1.jpg"
-              />
+              <Avatar alt={talkList.username} src={talkList.image.path} />
             </ListItemAvatar>
 
             <ListItemText

@@ -14,6 +14,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "../redux/slices/userSlice";
+import twitterLogin from "../twitter/auth_twitter_signin_redirect";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
 function Copyright(props: any) {
   return (
@@ -129,6 +131,23 @@ export default function SignIn() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Box
+          width={"100%"}
+          height={36}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            color: "white",
+            bgcolor: "#1DA1F2",
+          }}
+          onClick={() => twitterLogin()}
+        >
+          <TwitterIcon sx={{ marginY: "auto" }} fontSize="small" />
+          <Box width={10} />
+          <Typography sx={{ marginY: "auto" }} fontWeight={"bold"}>
+            Twitterでログイン
+          </Typography>
+        </Box>
       </Container>
     </ThemeProvider>
   );

@@ -7,7 +7,13 @@ import {
   FirebaseFieldValue,
   FirebaseTimestamp,
 } from "../../firebase/firebase";
-import useGetUidFromName from "../../hooks/useGetUidFromName";
+import {
+  getAuth,
+  getRedirectResult,
+  signInWithRedirect,
+  TwitterAuthProvider,
+  User,
+} from "firebase/auth";
 
 export type userState = {
   user: {
@@ -138,6 +144,66 @@ export const signOutUser = createAsyncThunk("user/signOutUser", async () => {
   };
 });
 
+export const addTwitterUser = createAsyncThunk(
+  "user/addTwitterUser",
+  async (user: User & { twitterId: string }) => {
+    const uid = user.uid;
+    const timestamp = FirebaseTimestamp.now();
+    const userInitialData = {
+      created_at: timestamp,
+      email: user.email,
+      uuId: user.twitterId,
+      uid: uid,
+      updated_at: timestamp,
+      username: user.displayName,
+      countries: [],
+      image: {
+        id: "",
+        path: user.photoURL,
+      },
+      chatRooms: [],
+    };
+    await db.collection("users").doc(uid).set(userInitialData);
+
+    return {
+      uid: uid,
+      username: user.displayName,
+      email: user.email,
+      isSignedIn: true,
+      countries: [],
+      image: {
+        id: "",
+        path: user.photoURL,
+      },
+      chatRooms: [],
+    };
+  }
+);
+
+export const fetchTwitterUser = createAsyncThunk(
+  "user/fetchTwitterUser",
+  async (user: User) => {
+    console.log(user);
+    const uid = user.uid;
+    const data: any = await (
+      await db.collection("users").doc(uid).get()
+    ).data();
+
+    return {
+      uid: uid,
+      username: data.username,
+      email: data.email,
+      isSignedIn: true,
+      countries: data.countries,
+      image: {
+        id: data.image.id,
+        path: data.image.path,
+      },
+      chatRooms: data.chatRooms,
+    };
+  }
+);
+
 export const addUser = createAsyncThunk(
   "user/addUser",
   async (adduser: adduser) => {
@@ -247,6 +313,16 @@ const userSlice = createSlice({
     });
     builder.addCase(addChatRoomId.rejected, (state, action: any) => {
       console.log(action.error);
+    });
+    builder.addCase(addTwitterUser.fulfilled, (state, action: any) => {
+      state.user = action.payload;
+      alert("登録しました。");
+      Router.push("/");
+    });
+    builder.addCase(fetchTwitterUser.fulfilled, (state, action: any) => {
+      state.user = action.payload;
+      alert("ログインしました。");
+      Router.push("/");
     });
   },
 });

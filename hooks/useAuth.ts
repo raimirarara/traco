@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, updateUserState } from "../redux/slices/userSlice";
 import { useRouter } from "next/router";
-import { auth, db } from "../firebase/firebase";
+import { auth, db, FirebaseTimestamp } from "../firebase/firebase";
+import useGetTwitterRedirectResult from "../twitter/auth_twitter_signin_redirect_result";
 
 const useAuth = ({ children }: any) => {
   const dispatch = useDispatch();
@@ -10,13 +11,13 @@ const useAuth = ({ children }: any) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (router.pathname != "/signup") {
+    if (router.pathname != "/signup" && router.pathname != "/signin") {
       if (
         !user.isSignedIn /*reduxのStateがfalseならば (今のところ、Reduxは更新するとfalseになるので、更新すると下記を通る)*/
       ) {
         // updateStateUser(user);
         /* firebaseでログインしているかどうか調べてして,いなければsigninに返す関数 */
-        auth.onAuthStateChanged(async (user) => {
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
           if (user) {
             const uid = user.uid;
             await db
@@ -44,8 +45,11 @@ const useAuth = ({ children }: any) => {
             router.push("/signin");
           }
         });
+        () => unsubscribe();
       }
       // reduxのstateがリロードされてfalseになったのをもとに戻す。
+    } else {
+      useGetTwitterRedirectResult({ dispatch: dispatch });
     }
   }, [user]);
   return children;
