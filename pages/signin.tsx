@@ -139,6 +139,9 @@ export default function SignIn() {
             justifyContent: "center",
             color: "white",
             bgcolor: "#1DA1F2",
+            ":hover": {
+              opacity: 0.5,
+            },
           }}
           onClick={() => twitterLogin()}
         >
