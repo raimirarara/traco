@@ -15,6 +15,7 @@ type Props = {
 };
 
 export default function useGetTwitterRedirectResult(props: Props) {
+  auth;
   getRedirectResult(auth)
     .then(async (result) => {
       // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
@@ -49,6 +50,6 @@ export default function useGetTwitterRedirectResult(props: Props) {
       // The AuthCredential type that was used.
       const credential = TwitterAuthProvider.credentialFromError(error);
       // ...
-      console.log(error);
+      console.log(errorMessage);
     });
 }

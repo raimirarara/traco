@@ -13,7 +13,7 @@ export default function Talk() {
 
   useEffect(() => {
     useMakeTalkLists(user.chatRooms).then((talkLists) => {
-      setTimeout(() => setTalkLists(talkLists), 300);
+      setTimeout(() => setTalkLists(talkLists), 500);
       console.log(talkLists);
     });
   }, [user]);
