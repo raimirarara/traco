@@ -1,19 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import Router from "next/router";
+import { auth, db } from "../../firebase/firebase";
 import {
-  auth,
-  db,
-  FirebaseFieldValue,
-  FirebaseTimestamp,
-} from "../../firebase/firebase";
-import {
+  createUserWithEmailAndPassword,
   getAuth,
   getRedirectResult,
+  signInWithEmailAndPassword,
   signInWithRedirect,
+  signOut,
   TwitterAuthProvider,
   User,
 } from "firebase/auth";
+import { useReducer } from "react";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  FieldValue,
+  getDoc,
+  setDoc,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 
 export type userState = {
   user: {
@@ -69,92 +78,99 @@ export type AddChatRoomId = {
 
 export const addChatRoomId = createAsyncThunk(
   "user/addChatRoomId",
-  async (addchatroomId: AddChatRoomId) => {
+  async (addchatroomId: AddChatRoomId, thunkAPI) => {
     const { uid, chatPartnerUid, chatRoomId } = addchatroomId;
 
-    // userのchatRoomsにroomIdを追加
-    await db
-      .collection("users")
-      .doc(uid)
-      .update({
-        chatRooms: FirebaseFieldValue.arrayUnion({
-          chatRoomId: chatRoomId,
-          chatPartnerUid: chatPartnerUid,
-        }),
-      });
-    await db
-      .collection("users")
-      .doc(chatPartnerUid)
-      .update({
-        chatRooms: FirebaseFieldValue.arrayUnion({
-          chatRoomId: chatRoomId,
-          chatPartnerUid: uid,
-        }),
-      });
+    const docRef = doc(db, "users", uid);
 
-    const data: any = await (
-      await db.collection("users").doc(uid).get()
-    ).data();
+    await updateDoc(docRef, {
+      chatRooms: arrayUnion({
+        chatRoomId: chatRoomId,
+        chatPartnerUid: chatPartnerUid,
+      }),
+    });
 
-    return {
-      uid: uid,
-      username: data.username,
-      email: data.email,
-      isSignedIn: true,
-      countries: data.countries,
-      image: {
-        id: data.image.id,
-        path: data.image.path,
-      },
-      chatRooms: data.chatRooms,
-    };
+    const docPartnerRef = doc(db, "users", chatPartnerUid);
+
+    await updateDoc(docPartnerRef, {
+      chatRooms: arrayUnion({
+        chatRoomId: chatRoomId,
+        chatPartnerUid: uid,
+      }),
+    });
+
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+
+    thunkAPI.dispatch(
+      updateUserState({
+        uid: uid,
+        username: data?.username,
+        email: data?.email,
+        isSignedIn: true,
+        countries: data?.countries,
+        image: {
+          id: data?.image.id,
+          path: data?.image.path,
+        },
+        chatRooms: data?.chatRooms,
+      })
+    );
   }
 );
 
 export const editCountries = createAsyncThunk(
   "user/editCountries",
-  async (editcountries: EditCountries) => {
+  async (editcountries: EditCountries, thunkAPI) => {
     const { uid, countries } = editcountries;
     console.log(countries);
-    await db.collection("users").doc(uid).update({ countries: countries });
-    const data: any = await (
-      await db.collection("users").doc(uid).get()
-    ).data();
 
-    return {
-      uid: uid,
-      username: data.username,
-      email: data.email,
-      isSignedIn: true,
-      countries: countries,
-      image: {
-        id: data.image.id,
-        path: data.image.path,
-      },
-      chatRooms: data.chatRooms,
-    };
+    const docRef = doc(db, "users", uid);
+
+    await updateDoc(docRef, { countries: countries });
+
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+
+    thunkAPI.dispatch(
+      updateUserState({
+        uid: uid,
+        username: data?.username,
+        email: data?.email,
+        isSignedIn: true,
+        countries: data?.countries,
+        image: {
+          id: data?.image.id,
+          path: data?.image.path,
+        },
+        chatRooms: data?.chatRooms,
+      })
+    );
   }
 );
 
-export const signOutUser = createAsyncThunk("user/signOutUser", async () => {
-  auth.signOut();
-
-  return {
-    ...initialState.user,
-  };
-});
+export const signOutUser = createAsyncThunk(
+  "user/signOutUser",
+  async ({}, thunkAPI) => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+    thunkAPI.dispatch(updateUserState({ ...initialState.user }));
+  }
+);
 
 export const addTwitterUser = createAsyncThunk(
   "user/addTwitterUser",
-  async (user: User & { twitterId: string }) => {
-    const uid = user.uid;
-    const timestamp = FirebaseTimestamp.now();
-    const userInitialData = {
-      created_at: timestamp,
+  async (user: User & { twitterId: string }, thunkAPI) => {
+    const docData = {
+      created_at: Timestamp.now(),
       email: user.email,
       uuId: user.twitterId,
-      uid: uid,
-      updated_at: timestamp,
+      uid: user.uid,
       username: user.displayName,
       countries: [],
       image: {
@@ -163,113 +179,137 @@ export const addTwitterUser = createAsyncThunk(
       },
       chatRooms: [],
     };
-    await db.collection("users").doc(uid).set(userInitialData);
 
-    return {
-      uid: uid,
-      username: user.displayName,
-      email: user.email,
-      isSignedIn: true,
-      countries: [],
-      image: {
-        id: "",
-        path: user.photoURL,
-      },
-      chatRooms: [],
-    };
-  }
-);
+    setDoc(doc(db, "users", user.uid), docData);
 
-export const fetchTwitterUser = createAsyncThunk(
-  "user/fetchTwitterUser",
-  async (user: User) => {
-    console.log(user);
-    const uid = user.uid;
-    const data: any = await (
-      await db.collection("users").doc(uid).get()
-    ).data();
-
-    return {
-      uid: uid,
-      username: data.username,
-      email: data.email,
-      isSignedIn: true,
-      countries: data.countries,
-      image: {
-        id: data.image.id,
-        path: data.image.path,
-      },
-      chatRooms: data.chatRooms,
-    };
-  }
-);
-
-export const addUser = createAsyncThunk(
-  "user/addUser",
-  async (adduser: adduser) => {
-    const { username, email, password } = adduser;
-
-    const result = await auth.createUserWithEmailAndPassword(email, password);
-    const user = result.user;
-
-    if (user) {
-      const uid = user.uid;
-      const timestamp = FirebaseTimestamp.now();
-      const userInitialData = {
-        created_at: timestamp,
-        email: email,
-        uid: uid,
-        updated_at: timestamp,
-        username: username,
+    // Reduxのstateを更新する
+    thunkAPI.dispatch(
+      updateUserState({
+        uid: user.uid,
+        username: user.displayName,
+        isSignedIn: true,
+        email: user.email,
         countries: [],
         image: {
           id: "",
           path: "",
         },
         chatRooms: [],
-      };
+      })
+    );
+  }
+);
 
-      await db.collection("users").doc(uid).set(userInitialData);
-      await db
-        .collection("users")
-        .doc(uid)
-        .collection("userPublic")
-        .doc(uid)
-        .set({ username: username });
-      console.log("登録成功");
+export const fetchTwitterUser = createAsyncThunk(
+  "user/fetchTwitterUser",
+  async (user: User, thunkAPI) => {
+    const uid = user.uid;
+    const docRef = doc(db, "users", uid);
 
-      return userInitialData;
-    }
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+
+    thunkAPI.dispatch(
+      updateUserState({
+        uid: uid,
+        username: data?.username,
+        email: data?.email,
+        isSignedIn: true,
+        countries: data?.countries,
+        image: {
+          id: data?.image.id,
+          path: data?.image.path,
+        },
+        chatRooms: data?.chatRooms,
+      })
+    );
+  }
+);
+
+export const addUser = createAsyncThunk(
+  "user/addUser",
+  async (adduser: adduser, thunkAPI) => {
+    const { username, email, password } = adduser;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+
+        const docData = {
+          created_at: Timestamp.now(),
+          email: email,
+          uid: user.uid,
+          username: username,
+          countries: [],
+          image: {
+            id: "",
+            path: "",
+          },
+          chatRooms: [],
+        };
+
+        setDoc(doc(db, "users", user.uid), docData);
+
+        // Reduxのstateを更新する
+        thunkAPI.dispatch(
+          updateUserState({
+            uid: user.uid,
+            username: username,
+            isSignedIn: true,
+            email: email,
+            countries: [],
+            image: {
+              id: "",
+              path: "",
+            },
+            chatRooms: [],
+          })
+        );
+
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
   }
 );
 
 export const fetchUser = createAsyncThunk(
   "user/fetchUser",
-  async (fetchuser: fetchuser) => {
+  async (fetchuser: fetchuser, thunkAPI) => {
     const { email, password } = fetchuser;
 
-    const response: any = await auth.signInWithEmailAndPassword(
-      email,
-      password
-    );
+    signInWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        const uid = user.uid;
+        const docRef = doc(db, "users", uid);
 
-    const uid = response.user.uid;
-    const data: any = await (
-      await db.collection("users").doc(uid).get()
-    ).data();
+        const docSnap = await getDoc(docRef);
 
-    return {
-      uid: uid,
-      username: data.username,
-      email: data.email,
-      isSignedIn: true,
-      countries: data.countries,
-      image: {
-        id: data.image.id,
-        path: data.image.path,
-      },
-      chatRooms: data.chatRooms,
-    };
+        const data = docSnap.data();
+
+        // Reduxのstateを更新する
+        thunkAPI.dispatch(
+          updateUserState({
+            uid: uid,
+            username: data?.username,
+            isSignedIn: true,
+            email: data?.email,
+            countries: data?.countries,
+            image: data?.image,
+            chatRooms: data?.chatRooms,
+          })
+        );
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
   }
 );
 
@@ -290,9 +330,6 @@ const userSlice = createSlice({
       alert("登録完了しました。");
       Router.push("/");
     });
-    builder.addCase(addUser.rejected, (state, action: any) => {
-      console.log(action.error);
-    });
     builder.addCase(fetchUser.fulfilled, (state, action: any) => {
       state.user = action.payload; // payloadCreatorでreturnされた値
       alert("ログインしました。");
@@ -302,17 +339,6 @@ const userSlice = createSlice({
       state.user = action.payload;
       alert("ログアウトしました。");
       Router.push("/signin");
-    });
-    builder.addCase(editCountries.fulfilled, (state, action: any) => {
-      state.user = action.payload;
-      console.log(state.user);
-    });
-    builder.addCase(addChatRoomId.fulfilled, (state, action: any) => {
-      state.user = action.payload;
-      console.log(state.user);
-    });
-    builder.addCase(addChatRoomId.rejected, (state, action: any) => {
-      console.log(action.error);
     });
     builder.addCase(addTwitterUser.fulfilled, (state, action: any) => {
       state.user = action.payload;
