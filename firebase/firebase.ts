@@ -21,7 +21,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -31,3 +31,4 @@ export const auth = firebase.auth();
 export const db = firebase.firestore();
 export const FirebaseFieldValue = firebase.firestore.FieldValue;
 export const FirebaseTimestamp = firebase.firestore.Timestamp;
+export default app;

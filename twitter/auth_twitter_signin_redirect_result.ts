@@ -15,7 +15,6 @@ type Props = {
 };
 
 export default function useGetTwitterRedirectResult(props: Props) {
-  auth;
   getRedirectResult(auth)
     .then(async (result) => {
       // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
