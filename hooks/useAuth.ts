@@ -14,33 +14,35 @@ const useAuth = ({ children }: any) => {
 
   useEffect(() => {
     if (router.pathname != "/signup" && router.pathname != "/signin") {
-      /* firebaseでログインしているかどうか調べてして,いなければsigninに返す関数 */
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const uid = user.uid;
+      if (!user.isSignedIn) {
+        /* firebaseでログインしているかどうか調べてして,いなければsigninに返す関数 */
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const uid = user.uid;
 
-          const docRef = doc(db, "users", uid);
+            const docRef = doc(db, "users", uid);
 
-          const docSnap = await getDoc(docRef);
+            const docSnap = await getDoc(docRef);
 
-          const data = docSnap.data();
+            const data = docSnap.data();
 
-          // Reduxのstateを更新する
-          dispatch(
-            updateUserState({
-              uid: uid,
-              username: data?.username,
-              isSignedIn: true,
-              email: data?.email,
-              countries: data?.countries,
-              image: data?.image,
-              chatRooms: data?.chatRooms,
-            })
-          );
-        } else {
-          router.push("/signin");
-        }
-      });
+            // Reduxのstateを更新する
+            dispatch(
+              updateUserState({
+                uid: uid,
+                username: data?.username,
+                isSignedIn: true,
+                email: data?.email,
+                countries: data?.countries,
+                image: data?.image,
+                chatRooms: data?.chatRooms,
+              })
+            );
+          } else {
+            router.push("/signin");
+          }
+        });
+      }
     } else {
       useGetTwitterRedirectResult({ dispatch: dispatch });
     }

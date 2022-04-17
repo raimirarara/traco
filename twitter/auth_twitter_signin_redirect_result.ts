@@ -5,10 +5,10 @@ import {
   TwitterAuthProvider,
   UserCredential,
 } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { Dispatch } from "react";
-import { db } from "../firebase/firebase";
+import { auth, db } from "../firebase/firebase";
 import { addTwitterUser, fetchTwitterUser } from "../redux/slices/userSlice";
-import { auth } from "./auth_twitter_signin_redirect";
 
 type Props = {
   dispatch: Dispatch<any>;
@@ -27,17 +27,16 @@ export default function useGetTwitterRedirectResult(props: Props) {
 
         // The signed-in user info.
         const user = result.user;
-        await db
-          .collection("users")
-          .doc(user.uid)
-          .get()
-          .then((doc) => {
-            if (doc.exists) {
-              props.dispatch(fetchTwitterUser(user));
-            } else {
-              props.dispatch(addTwitterUser({ ...user, twitterId }));
-            }
-          });
+
+        const docRef = doc(db, "users", user.uid);
+
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          props.dispatch(fetchTwitterUser(user));
+        } else {
+          props.dispatch(addTwitterUser({ ...user, twitterId }));
+        }
       }
     })
     .catch((error) => {

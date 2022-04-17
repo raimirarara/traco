@@ -6,6 +6,13 @@ import Image from "next/image";
 import PersonIcon from "@mui/icons-material/Person";
 import { PertnerUser } from "../../pages/chat/[chatRoomId]";
 import useGetWindowSize from "../../hooks/useGetWindowSize";
+import {
+  collection,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 
 type Props = {
   currentUser: {
@@ -45,25 +52,25 @@ export default function ChatArea(props: Props) {
   };
 
   useEffect(() => {
-    const unsubscribe = db
-      .collection("chatrooms")
-      .doc(props.roomId)
-      .collection("messages")
-      .orderBy("created_at", "asc")
-      .onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === "added") {
-            console.log("add", change.doc.data());
-            addLog(change.doc.id, change.doc.data());
-          }
-          if (change.type === "modified") {
-            console.log("Modified city: ", change.doc.data());
-          }
-          if (change.type === "removed") {
-            console.log("Removed city: ", change.doc.data());
-          }
-        });
+    const q = query(
+      collection(db, "chatrooms", props.roomId, "messages"),
+      orderBy("created_at", "asc")
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          console.log("add", change.doc.data());
+          addLog(change.doc.id, change.doc.data());
+        }
+        if (change.type === "modified") {
+          console.log("Modified city: ", change.doc.data());
+        }
+        if (change.type === "removed") {
+          console.log("Removed city: ", change.doc.data());
+        }
       });
+    });
 
     // Stop listening to changes
     return () => unsubscribe();

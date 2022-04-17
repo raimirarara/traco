@@ -1,15 +1,15 @@
-import { db, FirebaseTimestamp } from "../firebase/firebase";
+import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 export default async function useMakeChatRoom(): Promise<string> {
-  const chatRoomRef = await db.collection("chatrooms").doc();
-  const timestamp = FirebaseTimestamp.now();
+  const chatRoomRef = doc(collection(db, "chatrooms"));
 
   const initialChatRoom = {
     chatRoomId: chatRoomRef.id,
-    created_at: timestamp,
+    created_at: Timestamp.now(),
   };
 
-  await chatRoomRef.set(initialChatRoom);
+  await setDoc(chatRoomRef, initialChatRoom);
 
   return chatRoomRef.id;
 }

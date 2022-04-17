@@ -1,31 +1,20 @@
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { PertnerUser } from "../pages/chat/[chatRoomId]";
 
 export default async function useGetUserData(
   uid: string
 ): Promise<PertnerUser> {
-  let pertnerUserData = {
+  const docRef = doc(db, "users", uid);
+
+  const docSnap = await getDoc(docRef);
+
+  const data = docSnap.data();
+
+  return {
     uid: uid,
-    username: "",
-    countries: [],
-    image: {
-      id: "",
-      path: "",
-    },
+    username: data?.username,
+    countries: data?.countries,
+    image: data?.image,
   };
-
-  await db
-    .collection("users")
-    .doc(uid)
-    .get()
-    .then((doc) => {
-      pertnerUserData = {
-        uid: uid,
-        username: doc.data()?.username,
-        countries: doc.data()?.countries,
-        image: doc.data()?.image,
-      };
-    });
-
-  return pertnerUserData;
 }

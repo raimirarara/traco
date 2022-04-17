@@ -102,20 +102,18 @@ export const addChatRoomId = createAsyncThunk(
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
 
-    thunkAPI.dispatch(
-      updateUserState({
-        uid: uid,
-        username: data?.username,
-        email: data?.email,
-        isSignedIn: true,
-        countries: data?.countries,
-        image: {
-          id: data?.image.id,
-          path: data?.image.path,
-        },
-        chatRooms: data?.chatRooms,
-      })
-    );
+    return {
+      uid: uid,
+      username: data?.username,
+      email: data?.email,
+      isSignedIn: true,
+      countries: data?.countries,
+      image: {
+        id: data?.image.id,
+        path: data?.image.path,
+      },
+      chatRooms: data?.chatRooms,
+    };
   }
 );
 
@@ -132,20 +130,18 @@ export const editCountries = createAsyncThunk(
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
 
-    thunkAPI.dispatch(
-      updateUserState({
-        uid: uid,
-        username: data?.username,
-        email: data?.email,
-        isSignedIn: true,
-        countries: data?.countries,
-        image: {
-          id: data?.image.id,
-          path: data?.image.path,
-        },
-        chatRooms: data?.chatRooms,
-      })
-    );
+    return {
+      uid: uid,
+      username: data?.username,
+      email: data?.email,
+      isSignedIn: true,
+      countries: data?.countries,
+      image: {
+        id: data?.image.id,
+        path: data?.image.path,
+      },
+      chatRooms: data?.chatRooms,
+    };
   }
 );
 
@@ -159,7 +155,9 @@ export const signOutUser = createAsyncThunk(
       .catch((error) => {
         // An error happened.
       });
-    thunkAPI.dispatch(updateUserState({ ...initialState.user }));
+    return {
+      ...initialState.user,
+    };
   }
 );
 
@@ -180,23 +178,21 @@ export const addTwitterUser = createAsyncThunk(
       chatRooms: [],
     };
 
-    setDoc(doc(db, "users", user.uid), docData);
+    await setDoc(doc(db, "users", user.uid), docData);
 
     // Reduxのstateを更新する
-    thunkAPI.dispatch(
-      updateUserState({
-        uid: user.uid,
-        username: user.displayName,
-        isSignedIn: true,
-        email: user.email,
-        countries: [],
-        image: {
-          id: "",
-          path: "",
-        },
-        chatRooms: [],
-      })
-    );
+    return {
+      uid: user.uid,
+      username: user.displayName,
+      isSignedIn: true,
+      email: user.email,
+      countries: [],
+      image: {
+        id: "",
+        path: "",
+      },
+      chatRooms: [],
+    };
   }
 );
 
@@ -209,20 +205,18 @@ export const fetchTwitterUser = createAsyncThunk(
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
 
-    thunkAPI.dispatch(
-      updateUserState({
-        uid: uid,
-        username: data?.username,
-        email: data?.email,
-        isSignedIn: true,
-        countries: data?.countries,
-        image: {
-          id: data?.image.id,
-          path: data?.image.path,
-        },
-        chatRooms: data?.chatRooms,
-      })
-    );
+    return {
+      uid: uid,
+      username: data?.username,
+      email: data?.email,
+      isSignedIn: true,
+      countries: data?.countries,
+      image: {
+        id: data?.image.id,
+        path: data?.image.path,
+      },
+      chatRooms: data?.chatRooms,
+    };
   }
 );
 
@@ -231,49 +225,43 @@ export const addUser = createAsyncThunk(
   async (adduser: adduser, thunkAPI) => {
     const { username, email, password } = adduser;
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-        const docData = {
-          created_at: Timestamp.now(),
-          email: email,
-          uid: user.uid,
-          username: username,
-          countries: [],
-          image: {
-            id: "",
-            path: "",
-          },
-          chatRooms: [],
-        };
+    // Signed in
+    const user = userCredential.user;
 
-        setDoc(doc(db, "users", user.uid), docData);
+    const docData = {
+      created_at: Timestamp.now(),
+      email: email,
+      uid: user.uid,
+      username: username,
+      countries: [],
+      image: {
+        id: "",
+        path: "",
+      },
+      chatRooms: [],
+    };
 
-        // Reduxのstateを更新する
-        thunkAPI.dispatch(
-          updateUserState({
-            uid: user.uid,
-            username: username,
-            isSignedIn: true,
-            email: email,
-            countries: [],
-            image: {
-              id: "",
-              path: "",
-            },
-            chatRooms: [],
-          })
-        );
+    await setDoc(doc(db, "users", user.uid), docData);
 
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
+    // Reduxのstateを更新する
+    return {
+      uid: user.uid,
+      username: username,
+      isSignedIn: true,
+      email: email,
+      countries: [],
+      image: {
+        id: "",
+        path: "",
+      },
+      chatRooms: [],
+    };
   }
 );
 
@@ -282,34 +270,31 @@ export const fetchUser = createAsyncThunk(
   async (fetchuser: fetchuser, thunkAPI) => {
     const { email, password } = fetchuser;
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        const uid = user.uid;
-        const docRef = doc(db, "users", uid);
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-        const docSnap = await getDoc(docRef);
+    // Signed in
+    const user = userCredential.user;
+    const uid = user.uid;
+    const docRef = doc(db, "users", uid);
 
-        const data = docSnap.data();
+    const docSnap = await getDoc(docRef);
 
-        // Reduxのstateを更新する
-        thunkAPI.dispatch(
-          updateUserState({
-            uid: uid,
-            username: data?.username,
-            isSignedIn: true,
-            email: data?.email,
-            countries: data?.countries,
-            image: data?.image,
-            chatRooms: data?.chatRooms,
-          })
-        );
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+    const data = docSnap.data();
+
+    // Reduxのstateを更新する
+    return {
+      uid: uid,
+      username: data?.username,
+      isSignedIn: true,
+      email: data?.email,
+      countries: data?.countries,
+      image: data?.image,
+      chatRooms: data?.chatRooms,
+    };
   }
 );
 
@@ -330,6 +315,9 @@ const userSlice = createSlice({
       alert("登録完了しました。");
       Router.push("/");
     });
+    builder.addCase(addUser.rejected, (state, action: any) => {
+      console.log(action.error);
+    });
     builder.addCase(fetchUser.fulfilled, (state, action: any) => {
       state.user = action.payload; // payloadCreatorでreturnされた値
       alert("ログインしました。");
@@ -339,6 +327,17 @@ const userSlice = createSlice({
       state.user = action.payload;
       alert("ログアウトしました。");
       Router.push("/signin");
+    });
+    builder.addCase(editCountries.fulfilled, (state, action: any) => {
+      state.user = action.payload;
+      console.log(state.user);
+    });
+    builder.addCase(addChatRoomId.fulfilled, (state, action: any) => {
+      state.user = action.payload;
+      console.log(state.user);
+    });
+    builder.addCase(addChatRoomId.rejected, (state, action: any) => {
+      console.log(action.error);
     });
     builder.addCase(addTwitterUser.fulfilled, (state, action: any) => {
       state.user = action.payload;
