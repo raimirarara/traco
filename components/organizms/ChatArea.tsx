@@ -111,8 +111,8 @@ export default function ChatArea(props: Props) {
                 {log.content}
               </p>
               <div className="mt-auto mb-3 text-xs">{log.time}</div>
-              <div className="w-1/3" />
             </div>
+            <div className="w-1/3" />
           </div>
         )
       )}

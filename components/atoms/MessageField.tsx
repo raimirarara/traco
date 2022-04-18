@@ -39,6 +39,7 @@ export default function MessageField(props: Props) {
           label="メッセージを入力"
           variant="filled"
           fullWidth
+          multiline
           value={value}
           onChange={(e) => inputText(e)}
         />
