@@ -117,6 +117,54 @@ export const addChatRoomId = createAsyncThunk(
   }
 );
 
+export const editProfileImage = createAsyncThunk(
+  "user/editProfileImage",
+  async (editimage: { uid: string; image: { id: string; path: string } }) => {
+    const { uid, image } = editimage;
+
+    const docRef = doc(db, "users", uid);
+
+    await updateDoc(docRef, { image: image });
+
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+
+    return {
+      uid: uid,
+      username: data?.username,
+      email: data?.email,
+      isSignedIn: true,
+      countries: data?.countries,
+      image: data?.image,
+      chatRooms: data?.chatRooms,
+    };
+  }
+);
+
+export const editName = createAsyncThunk(
+  "user/editName",
+  async (editname: { uid: string; username: string }, thunkAPI) => {
+    const { uid, username } = editname;
+
+    const docRef = doc(db, "users", uid);
+
+    await updateDoc(docRef, { username: username });
+
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+
+    return {
+      uid: uid,
+      username: data?.username,
+      email: data?.email,
+      isSignedIn: true,
+      countries: data?.countries,
+      image: data?.image,
+      chatRooms: data?.chatRooms,
+    };
+  }
+);
+
 export const editCountries = createAsyncThunk(
   "user/editCountries",
   async (editcountries: EditCountries, thunkAPI) => {
@@ -136,10 +184,7 @@ export const editCountries = createAsyncThunk(
       email: data?.email,
       isSignedIn: true,
       countries: data?.countries,
-      image: {
-        id: data?.image.id,
-        path: data?.image.path,
-      },
+      image: data?.image,
       chatRooms: data?.chatRooms,
     };
   }
@@ -315,9 +360,6 @@ const userSlice = createSlice({
       alert("登録完了しました。");
       Router.push("/");
     });
-    builder.addCase(addUser.rejected, (state, action: any) => {
-      console.log(action.error);
-    });
     builder.addCase(fetchUser.fulfilled, (state, action: any) => {
       state.user = action.payload; // payloadCreatorでreturnされた値
       alert("ログインしました。");
@@ -328,6 +370,14 @@ const userSlice = createSlice({
       alert("ログアウトしました。");
       Router.push("/signin");
     });
+    builder.addCase(editProfileImage.fulfilled, (state, action: any) => {
+      state.user = action.payload;
+      console.log(state.user);
+    });
+    builder.addCase(editName.fulfilled, (state, action: any) => {
+      state.user = action.payload;
+      console.log(state.user);
+    });
     builder.addCase(editCountries.fulfilled, (state, action: any) => {
       state.user = action.payload;
       console.log(state.user);
@@ -335,9 +385,6 @@ const userSlice = createSlice({
     builder.addCase(addChatRoomId.fulfilled, (state, action: any) => {
       state.user = action.payload;
       console.log(state.user);
-    });
-    builder.addCase(addChatRoomId.rejected, (state, action: any) => {
-      console.log(action.error);
     });
     builder.addCase(addTwitterUser.fulfilled, (state, action: any) => {
       state.user = action.payload;

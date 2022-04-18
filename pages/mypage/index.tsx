@@ -1,4 +1,11 @@
-import { Box, Button, IconButton, MenuList, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  MenuList,
+  Typography,
+} from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,14 +46,7 @@ export default function MyPage() {
           現在ログインしているユーザー
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "center" }} my={2}>
-          {user.image.path && (
-            <Image
-              className="rounded-full"
-              width={50}
-              height={50}
-              src={user.image.path}
-            />
-          )}
+          <Avatar sx={{ width: 80, height: 80 }} src={user.image.path} />
         </Box>
         <Typography align="center" variant="h6">
           {user.username}
