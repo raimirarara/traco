@@ -13,6 +13,7 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
+import { Avatar } from "@mui/material";
 
 type Props = {
   currentUser: {
@@ -91,17 +92,19 @@ export default function ChatArea(props: Props) {
               >
                 {log.content}
               </p>
-              <div className="my-auto">
-                <PersonIcon />
-              </div>
+              {/* <Avatar
+                sx={{ width: 30, height: 30, marginY: "auto" }}
+                src={props.currentUser.image.path}
+              /> */}
             </div>
           </div>
         ) : (
           <div className="flex">
             <div className="w-2/3 flex justify-start">
-              <div className="my-auto">
-                <PersonIcon />
-              </div>
+              <Avatar
+                sx={{ width: 30, height: 30, marginLeft: 1, marginY: "auto" }}
+                src={props.partnerUser.image.path}
+              />
 
               <p
                 className={
