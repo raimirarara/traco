@@ -14,6 +14,7 @@ import {
   query,
 } from "firebase/firestore";
 import { Avatar } from "@mui/material";
+import HTMLReactParser from "html-react-parser";
 
 type Props = {
   currentUser: {
@@ -31,6 +32,14 @@ export default function ChatArea(props: Props) {
   const [logs, setLogs] = useState<firebase.firestore.DocumentData[]>([]);
   const scrollBottomRef = useRef<HTMLDivElement>(null);
   const { height, width } = useGetWindowSize();
+
+  const returnCodeToBr = (text: string) => {
+    if (text === "") {
+      return text;
+    } else {
+      return HTMLReactParser(text.replace(/\r?\n/g, "<br>"));
+    }
+  };
 
   const addLog = (id: string, data: any) => {
     const log = {
@@ -90,7 +99,7 @@ export default function ChatArea(props: Props) {
                   "my-1 mx-2  py-2 px-4 rounded-full bg-blue-200 shadow-md"
                 }
               >
-                {log.content}
+                {returnCodeToBr(log.content)}
               </p>
               {/* <Avatar
                 sx={{ width: 30, height: 30, marginY: "auto" }}
