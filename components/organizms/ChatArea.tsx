@@ -18,6 +18,7 @@ import HTMLReactParser from "html-react-parser";
 
 type Props = {
   currentUser: {
+    uid: string;
     name: string;
     image: {
       id: string;
@@ -44,7 +45,7 @@ export default function ChatArea(props: Props) {
   const addLog = (id: string, data: any) => {
     const log = {
       key: id,
-      name: data.name,
+      uid: data.uid,
       content: data.content,
       date:
         data.created_at.toDate().getFullYear() +
@@ -89,7 +90,7 @@ export default function ChatArea(props: Props) {
   return (
     <Box height={height - 96} className={"overflow-scroll"}>
       {logs.map((log) =>
-        log.name == props.currentUser.name ? (
+        log.uid == props.currentUser.uid ? (
           <div className="flex">
             <div className="w-1/3" />
             <div className="w-2/3 flex justify-end">
@@ -120,7 +121,7 @@ export default function ChatArea(props: Props) {
                   "my-1 mx-2  py-2 px-4 rounded-full bg-green-200 shadow-md"
                 }
               >
-                {log.content}
+                {returnCodeToBr(log.content)}
               </p>
               <div className="mt-auto mb-3 text-xs">{log.time}</div>
             </div>

@@ -59,14 +59,18 @@ export default function ChatRoomId() {
 
           <ChatArea
             roomId={router.query.chatRoomId as string}
-            currentUser={{ name: user.username, image: user.image }}
+            currentUser={{
+              uid: user.uid,
+              name: user.username,
+              image: user.image,
+            }}
             partnerUser={partnerUser}
           />
 
           <div className="bottom-0">
             <MessageField
               roomId={router.query.chatRoomId as string}
-              name={user.username}
+              uid={user.uid}
               sendText={useSendText}
             />
           </div>

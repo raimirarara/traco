@@ -17,7 +17,7 @@ export type TalkLists = {
     path: string;
   };
   latestTalk: {
-    name: string;
+    uid: string;
     content: string;
     date: Date;
   };
@@ -31,7 +31,7 @@ export default async function useMakeTalkLists(
 ): Promise<TalkLists> {
   const talkLists: TalkLists = [];
 
-  await chatRooms.forEach((chatRoom) => {
+  chatRooms.forEach((chatRoom) => {
     useGetUserData(chatRoom.chatPartnerUid).then(async (partnerUserData) => {
       console.log("get partnerUserData!!!");
 
@@ -50,7 +50,7 @@ export default async function useMakeTalkLists(
           username: partnerUserData.username,
           image: partnerUserData.image,
           latestTalk: {
-            name: doc.data().name,
+            uid: doc.data().uid,
             content: doc.data().content,
             date: doc.data().created_at.toDate(),
           },

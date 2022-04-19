@@ -11,10 +11,10 @@ export default function Talk() {
 
   const [talkLists, setTalkLists] = useState<TalkLists>([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     useMakeTalkLists(user.chatRooms).then((talkLists) => {
-      setTimeout(() => setTalkLists(talkLists), 500);
-      console.log(talkLists);
+      setTimeout(() => setTalkLists(talkLists), 700);
+      // setTalkLists(talkLists);
     });
   }, [user]);
 
@@ -25,7 +25,10 @@ export default function Talk() {
           Talk
         </Typography>
 
-        <TalkList talkLists={talkLists} />
+        <TalkList
+          currentUser={{ uid: user.uid, username: user.username }}
+          talkLists={talkLists}
+        />
       </Box>
       <div className="w-full fixed bottom-0">
         <SimpleBottomNavigation />

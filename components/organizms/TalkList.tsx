@@ -10,6 +10,10 @@ import { TalkLists } from "../../hooks/useMakeTalkLists";
 import { useRouter } from "next/router";
 
 type Props = {
+  currentUser: {
+    uid: string;
+    username: string;
+  };
   talkLists: TalkLists;
 };
 
@@ -38,7 +42,9 @@ export default function TalkList(props: Props) {
                     variant="body2"
                     color="text.primary"
                   >
-                    {talkList.latestTalk.name}
+                    {props.currentUser.uid == talkList.latestTalk.uid
+                      ? props.currentUser.username
+                      : talkList.username}
                   </Typography>
                   {" — " + talkList.latestTalk.content}
                 </React.Fragment>

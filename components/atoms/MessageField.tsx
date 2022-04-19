@@ -6,8 +6,8 @@ import { IconButton } from "@mui/material";
 
 type Props = {
   roomId: string;
-  name: string;
-  sendText: (roomId: string, name: string, content: string) => Promise<void>;
+  uid: string;
+  sendText: (roomId: string, uid: string, content: string) => Promise<void>;
 };
 
 export default function MessageField(props: Props) {
@@ -20,7 +20,7 @@ export default function MessageField(props: Props) {
   };
 
   const handleClick = () => {
-    props.sendText(props.roomId, props.name, value);
+    props.sendText(props.roomId, props.uid, value);
     setValue("");
   };
 
