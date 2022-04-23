@@ -16,6 +16,15 @@ import { addTwitterUser, addUser } from "../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import twitterLogin from "../twitter/auth_twitter_signin_redirect";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import { auth } from "../firebase/firebase";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
+import { Router } from "@mui/icons-material";
+import { useRouter } from "next/router";
+import useCheckEmail from "../hooks/useCheckEmail";
 
 function Copyright(props: any) {
   return (
@@ -45,6 +54,7 @@ const validate = (password: string, confirmPassword: string) => {
 };
 
 export default function SignUp() {
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -64,17 +74,18 @@ export default function SignUp() {
       password: password,
     };
     if (validateFlag) {
-      dispatch(addUser(userdata));
+      createUserWithEmailAndPassword(auth, email, password).then(
+        (userCredential) => {
+          const user = userCredential.user;
+          dispatch(addUser({ ...user, username: username }));
+          useCheckEmail(user).then(() => {
+            router.push("/signin");
+          });
+        }
+      );
     } else {
       alert("パスワードが一致しません。");
     }
-
-    // eslint-disable-next-line no-console
-    console.log({
-      username: data.get("username"),
-      email: data.get("email"),
-      password: data.get("password"),
-    });
   };
 
   return (
@@ -171,7 +182,7 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Box
+        {/* <Box
           width={"100%"}
           height={36}
           mt={2}
@@ -191,7 +202,7 @@ export default function SignUp() {
           <Typography sx={{ marginY: "auto" }} fontWeight={"bold"}>
             Twitterで登録
           </Typography>
-        </Box>
+        </Box> */}
         <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>

@@ -16,6 +16,10 @@ import { useDispatch } from "react-redux";
 import { fetchUser } from "../redux/slices/userSlice";
 import twitterLogin from "../twitter/auth_twitter_signin_redirect";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import { auth } from "../firebase/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/router";
+import useCheckEmail from "../hooks/useCheckEmail";
 
 function Copyright(props: any) {
   return (
@@ -38,26 +42,41 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const router = useRouter();
   const dispatch = useDispatch();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-    const emailandpassword = {
-      email: email,
-      password: password,
-    };
-
-    dispatch(fetchUser(emailandpassword));
-
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        if (!user.emailVerified) {
+          if (
+            window.confirm(
+              "メールアドレスが確認されていません。確認メールをもう一度送信しますか？"
+            )
+          ) {
+            useCheckEmail(user).then(() => {
+              alert("送信されました!");
+            });
+          }
+        } else {
+          dispatch(fetchUser(user));
+          router.push("/");
+        }
+      })
+      .catch((error) => {
+        if (error.code == "auth/invalid-email") {
+          alert("メールアドレスが正しくありません");
+        }
+        if (error.code == "auth/wrong-password") {
+          alert("パスワードが正しくありません");
+        }
+      });
   };
 
   return (
@@ -131,7 +150,7 @@ export default function SignIn() {
           </Box>
         </Box>
 
-        <Box
+        {/* <Box
           width={"100%"}
           height={36}
           mt={2}
@@ -151,7 +170,7 @@ export default function SignIn() {
           <Typography sx={{ marginY: "auto" }} fontWeight={"bold"}>
             Twitterでログイン
           </Typography>
-        </Box>
+        </Box> */}
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>

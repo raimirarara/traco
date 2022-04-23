@@ -6,6 +6,7 @@ import { auth, db } from "../firebase/firebase";
 import useGetTwitterRedirectResult from "../twitter/auth_twitter_signin_redirect_result";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, doc, DocumentData, getDoc } from "firebase/firestore";
+import { Unsubscribe } from "@mui/icons-material";
 
 const useAuth = ({ children }: any) => {
   const dispatch = useDispatch();
@@ -16,32 +17,40 @@ const useAuth = ({ children }: any) => {
     if (router.pathname != "/signup" && router.pathname != "/signin") {
       if (!user.isSignedIn) {
         /* firebaseでログインしているかどうか調べてして,いなければsigninに返す関数 */
-        onAuthStateChanged(auth, async (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
           if (user) {
-            const uid = user.uid;
+            if (user.emailVerified) {
+              console.log(user.emailVerified);
+              const uid = user.uid;
 
-            const docRef = doc(db, "users", uid);
+              const docRef = doc(db, "users", uid);
 
-            const docSnap = await getDoc(docRef);
+              const docSnap = await getDoc(docRef);
 
-            const data = docSnap.data();
+              const data = docSnap.data();
 
-            // Reduxのstateを更新する
-            dispatch(
-              updateUserState({
-                uid: uid,
-                username: data?.username,
-                isSignedIn: true,
-                email: data?.email,
-                countries: data?.countries,
-                image: data?.image,
-                chatRooms: data?.chatRooms,
-              })
-            );
+              // Reduxのstateを更新する
+              dispatch(
+                updateUserState({
+                  uid: uid,
+                  username: data?.username,
+                  isSignedIn: true,
+                  email: data?.email,
+                  countries: data?.countries,
+                  image: data?.image,
+                  chatRooms: data?.chatRooms,
+                })
+              );
+            } else {
+              window.alert("メールアドレスの確認が済んでいません");
+              router.push("/signin");
+            }
           } else {
             router.push("/signin");
           }
         });
+
+        return () => unsubscribe();
       }
     } else {
       useGetTwitterRedirectResult({ dispatch: dispatch });

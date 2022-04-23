@@ -267,23 +267,12 @@ export const fetchTwitterUser = createAsyncThunk(
 
 export const addUser = createAsyncThunk(
   "user/addUser",
-  async (adduser: adduser, thunkAPI) => {
-    const { username, email, password } = adduser;
-
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-    // Signed in
-    const user = userCredential.user;
-
+  async (user: User & { username: string }, thunkAPI) => {
     const docData = {
       created_at: Timestamp.now(),
-      email: email,
+      email: user.email,
       uid: user.uid,
-      username: username,
+      username: user.username,
       countries: [],
       image: {
         id: "",
@@ -297,9 +286,9 @@ export const addUser = createAsyncThunk(
     // Reduxのstateを更新する
     return {
       uid: user.uid,
-      username: username,
-      isSignedIn: true,
-      email: email,
+      username: user.username,
+      isSignedIn: false, // emailが確認されたらtrueにする
+      email: user.email,
       countries: [],
       image: {
         id: "",
@@ -312,22 +301,10 @@ export const addUser = createAsyncThunk(
 
 export const fetchUser = createAsyncThunk(
   "user/fetchUser",
-  async (fetchuser: fetchuser, thunkAPI) => {
-    const { email, password } = fetchuser;
-
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-    // Signed in
-    const user = userCredential.user;
+  async (user: User, thunkAPI) => {
     const uid = user.uid;
     const docRef = doc(db, "users", uid);
-
     const docSnap = await getDoc(docRef);
-
     const data = docSnap.data();
 
     // Reduxのstateを更新する
@@ -357,13 +334,11 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(addUser.fulfilled, (state, action: any) => {
       state.user = action.payload; // payloadCreatorでreturnされた値
-      alert("登録完了しました。");
-      Router.push("/");
+      alert("メールアドレスの確認をお願いします");
     });
     builder.addCase(fetchUser.fulfilled, (state, action: any) => {
       state.user = action.payload; // payloadCreatorでreturnされた値
       alert("ログインしました。");
-      Router.push("/");
     });
     builder.addCase(signOutUser.fulfilled, (state, action: any) => {
       state.user = action.payload;

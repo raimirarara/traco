@@ -11,7 +11,7 @@ export default function Talk() {
 
   const [talkLists, setTalkLists] = useState<TalkLists>([]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     useMakeTalkLists(user.chatRooms).then((talkLists) => {
       setTimeout(() => setTalkLists(talkLists), 700);
       // setTalkLists(talkLists);
