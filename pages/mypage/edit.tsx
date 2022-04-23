@@ -175,7 +175,7 @@ export default function ProfileEdit() {
               {user.email}
             </Typography>
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "center" }} mt={4}>
+          <Box sx={{ display: "flex", justifyContent: "center" }} mt={2}>
             <MultiSelectCountries
               selectCountries={selectCountries}
               setSelectCountries={setSelectCountries}

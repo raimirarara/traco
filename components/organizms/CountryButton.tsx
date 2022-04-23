@@ -24,6 +24,7 @@ export default function CountryButton(props: Props) {
             borderColor: "red",
           },
         }}
+        variant="outlined"
         size="small"
         onClick={() => handleClick("韓国")}
       >
