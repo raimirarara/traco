@@ -51,7 +51,7 @@ export default function CountryButton(props: Props) {
         sx={{
           position: "absolute",
           zIndex: 1,
-          top: "45%",
+          top: "40%",
           left: "1%",
           ":hover": {
             color: "red",
@@ -68,7 +68,7 @@ export default function CountryButton(props: Props) {
         sx={{
           position: "absolute",
           zIndex: 1,
-          top: "55%",
+          top: "49%",
           left: "10%",
           ":hover": {
             color: "red",
@@ -85,8 +85,25 @@ export default function CountryButton(props: Props) {
         sx={{
           position: "absolute",
           zIndex: 1,
-          top: "50%",
-          left: "28%",
+          top: "57%",
+          left: "20%",
+          ":hover": {
+            color: "red",
+            borderColor: "red",
+          },
+        }}
+        variant="outlined"
+        size="small"
+        onClick={() => handleClick("カンボジア")}
+      >
+        カンボジア
+      </Button>
+      <Button
+        sx={{
+          position: "absolute",
+          zIndex: 1,
+          top: "48%",
+          left: "30%",
           ":hover": {
             color: "red",
             borderColor: "red",
@@ -103,7 +120,7 @@ export default function CountryButton(props: Props) {
           position: "absolute",
           zIndex: 1,
           top: "65%",
-          left: "10%",
+          left: "5%",
           ":hover": {
             color: "red",
             borderColor: "red",

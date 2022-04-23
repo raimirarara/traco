@@ -30,6 +30,9 @@ const countries = [
     value: "タイ",
   },
   {
+    value: "カンボジア",
+  },
+  {
     value: "ベトナム",
   },
   {

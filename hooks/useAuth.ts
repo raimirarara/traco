@@ -20,7 +20,7 @@ const useAuth = ({ children }: any) => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
           if (user) {
             if (user.emailVerified) {
-              console.log(user.emailVerified);
+              //createEmailandPasswordで、signinされるためこれが必要
               const uid = user.uid;
 
               const docRef = doc(db, "users", uid);
