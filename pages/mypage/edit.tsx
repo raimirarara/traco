@@ -102,7 +102,7 @@ export default function ProfileEdit() {
 
   return (
     <>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" sx={{ overflow: "scroll" }}>
         <Box
           sx={{
             marginTop: 2,
@@ -175,8 +175,7 @@ export default function ProfileEdit() {
               {user.email}
             </Typography>
           </Box>
-
-          <Box sx={{ display: "flex", justifyContent: "center" }} mt={8}>
+          <Box sx={{ display: "flex", justifyContent: "center" }} mt={4}>
             <MultiSelectCountries
               selectCountries={selectCountries}
               setSelectCountries={setSelectCountries}

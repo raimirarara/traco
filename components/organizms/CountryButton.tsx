@@ -19,8 +19,6 @@ export default function CountryButton(props: Props) {
           zIndex: 1,
           top: "15%",
           left: "60%",
-          border: 1,
-          borderColor: "primary",
           ":hover": {
             color: "red",
             borderColor: "red",

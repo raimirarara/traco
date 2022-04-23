@@ -54,7 +54,6 @@ export default function MyPage() {
         <Typography color={"primary"} align="center" variant="h5" mt={4}>
           登録しているメールアドレス
         </Typography>
-
         <Typography align="center" variant="h6">
           {user.email}
         </Typography>
