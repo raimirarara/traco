@@ -78,20 +78,17 @@ export default function ProfileEdit() {
       }); // CloudStorageにアップするためにBlobを使う
 
       // 'file' comes from the Blob or File API
-      uploadBytes(storageRef, blob)
-        .then(async (snapshot) => {
-          const url = await getDownloadURL(storageRef);
-          console.log(url);
-          dispatch(
-            editProfileImage({
-              uid: user.uid,
-              image: { id: fileName, path: url },
-            })
-          );
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      uploadBytes(storageRef, blob).then(async (snapshot) => {
+        const url = await getDownloadURL(storageRef);
+        console.log(url);
+        dispatch(
+          editProfileImage({
+            uid: user.uid,
+            image: { id: fileName, path: url },
+          })
+        );
+        alert("プロフィール画像を変更しました!");
+      });
     }
   };
 
@@ -149,6 +146,7 @@ export default function ProfileEdit() {
                   className="hidden"
                   type="file"
                   id="image"
+                  accept="image/*"
                   onChange={(e) => uploadImage(e)}
                 />
               </label>

@@ -74,15 +74,24 @@ export default function SignUp() {
       password: password,
     };
     if (validateFlag) {
-      createUserWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
           const user = userCredential.user;
           dispatch(addUser({ ...user, username: username }));
           useCheckEmail(user).then(() => {
             router.push("/signin");
           });
-        }
-      );
+        })
+        .catch((error) => {
+          console.log(error.code);
+          if (error.code == "auth/invalid-email") {
+            alert("正しいメールアドレスを入力してください");
+          } else if (error.code == "auth/weak-password") {
+            alert("6文字以上のパスワードを入力してください");
+          } else if (error.code == "auth/email-already-in-use") {
+            alert("このメールアドレスはすでに使われています");
+          }
+        });
     } else {
       alert("パスワードが一致しません。");
     }
@@ -139,7 +148,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Password (6文字以上)"
                   type="password"
                   id="password"
                   autoComplete="new-password"
@@ -154,14 +163,6 @@ export default function SignUp() {
                   type="password"
                   id="confirmPassword"
                   autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid>
             </Grid>
