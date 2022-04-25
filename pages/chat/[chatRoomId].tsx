@@ -44,17 +44,35 @@ export default function ChatRoomId() {
       {partnerUser ? (
         <div>
           <div className="w-full flex shadow-md bg-blue-50">
-            <div className="w-1/4 flex justify-center my-auto">
+            <Box
+              sx={{
+                width: "25%",
+                display: "flex",
+                justifyContent: "center",
+                justifyItems: "center",
+              }}
+            >
               <IconButton onClick={() => router.push("/talk")}>
                 <ArrowBackIosNewIcon color={"primary"} />
               </IconButton>
-            </div>
-            <div className="w-2/4 my-auto">
-              <Typography color={"primary"} textAlign="center" variant="h5">
+            </Box>
+            <Box
+              sx={{
+                width: "50%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                color={"primary"}
+                textAlign="center"
+                variant="h5"
+                my="auto"
+              >
                 {partnerUser.username}
               </Typography>
-            </div>
-            <div className="w-1/4" />
+            </Box>
+            <Box sx={{ width: "25%" }} />
           </div>
 
           <ChatArea
@@ -67,13 +85,13 @@ export default function ChatRoomId() {
             partnerUser={partnerUser}
           />
 
-          <div className="bottom-0">
+          <Box sx={{ bottom: 0 }}>
             <MessageField
               roomId={router.query.chatRoomId as string}
               uid={user.uid}
               sendText={useSendText}
             />
-          </div>
+          </Box>
         </div>
       ) : (
         <Box>しばらくお待ち下さい</Box>

@@ -23,7 +23,6 @@ import { db } from "../firebase/firebase";
 import useCountryUsers from "../hooks/useCountryUsers";
 import { useDispatch, useSelector } from "react-redux";
 import { addChatRoomId, getUser } from "../redux/slices/userSlice";
-import useGetUidFromName from "../hooks/useGetUidFromName";
 import { useRouter } from "next/router";
 import useMakeChatRoom from "../hooks/useMakeChatRoom";
 import useGetWindowSize from "../hooks/useGetWindowSize";
@@ -114,7 +113,7 @@ const Home: NextPage = () => {
                 >
                   <Avatar alt={users.username} src={users.image.path} />
                 </ListItemAvatar>
-                <ListItemText sx={{ textAlign: "center", pr: 4 }}>
+                <ListItemText sx={{ textAlign: "center", pr: 2 }}>
                   {users.username}
                 </ListItemText>
                 <IconButton onClick={() => startChat(users.uid)}>

@@ -13,7 +13,7 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import { Avatar } from "@mui/material";
+import { Avatar, Typography } from "@mui/material";
 import HTMLReactParser from "html-react-parser";
 
 type Props = {
@@ -58,7 +58,7 @@ export default function ChatArea(props: Props) {
         ":" +
         ("0" + data.created_at.toDate().getMinutes()).slice(-2),
     };
-    setLogs((prev) => [...prev, log]);
+    setLogs((prev) => [...prev, { ...log }]);
     scrollBottomRef?.current?.scrollIntoView();
   };
 
@@ -87,48 +87,104 @@ export default function ChatArea(props: Props) {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    console.log(logs);
+  }, [logs]);
+
   return (
     <Box height={height - 96} className={"overflow-scroll"}>
-      {logs.map((log) =>
-        log.uid == props.currentUser.uid ? (
-          <div className="flex">
-            <div className="w-1/3" />
-            <div className="w-2/3 flex justify-end">
-              <div className="mt-auto mb-3 text-xs">{log.time}</div>
-              <p
-                className={
-                  "my-1 mx-2  py-2 px-4 rounded-full bg-blue-200 shadow-md"
-                }
+      {logs.map((log: firebase.firestore.DocumentData, index: number) => (
+        <>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            {logs.length == 1 && (
+              <Typography
+                sx={{
+                  mt: 2,
+                  mb: 0.5,
+                  px: 2,
+                  textAlign: "center",
+                  borderRadius: "30px",
+                  bgcolor: "rgb(237 235 235)",
+                  boxShadow:
+                    "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+                }}
               >
-                {returnCodeToBr(log.content)}
-              </p>
-              {/* <Avatar
-                sx={{ width: 30, height: 30, marginY: "auto" }}
-                src={props.currentUser.image.path}
-              /> */}
-            </div>
-          </div>
-        ) : (
-          <div className="flex">
-            <div className="w-2/3 flex justify-start">
-              <Avatar
-                sx={{ width: 30, height: 30, marginLeft: 1, marginY: "auto" }}
-                src={props.partnerUser.image.path}
-              />
-
-              <p
-                className={
-                  "my-1 mx-2  py-2 px-4 rounded-full bg-green-200 shadow-md"
-                }
+                {log.date}
+              </Typography>
+            )}
+            {logs.length > 1 && logs[index].date != logs[index - 1]?.date && (
+              <Typography
+                sx={{
+                  mt: 2,
+                  mb: 0.5,
+                  px: 2,
+                  textAlign: "center",
+                  borderRadius: "30px",
+                  bgcolor: "rgb(237 235 235)",
+                  boxShadow:
+                    "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+                }}
               >
-                {returnCodeToBr(log.content)}
-              </p>
-              <div className="mt-auto mb-3 text-xs">{log.time}</div>
-            </div>
-            <div className="w-1/3" />
+                {log.date}
+              </Typography>
+            )}
+          </Box>
+          <div>
+            {log.uid == props.currentUser.uid ? (
+              <div className="flex">
+                <div className="w-1/3" />
+                <div className="w-2/3 flex justify-end">
+                  <div className="mt-auto mb-3 text-xs">{log.time}</div>
+                  <Typography
+                    sx={{
+                      my: 0.5,
+                      mx: 1,
+                      py: 1,
+                      px: 2,
+                      borderRadius: "30px",
+                      bgcolor: "rgb(191 219 254)",
+                      boxShadow:
+                        "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+                    }}
+                  >
+                    {returnCodeToBr(log.content)}
+                  </Typography>
+                </div>
+              </div>
+            ) : (
+              <div className="flex">
+                <div className="w-2/3 flex justify-start">
+                  <Avatar
+                    sx={{
+                      width: 30,
+                      height: 30,
+                      marginLeft: 1,
+                      marginY: "auto",
+                    }}
+                    src={props.partnerUser.image.path}
+                  />
+                  <Typography
+                    sx={{
+                      my: 0.5,
+                      mx: 1,
+                      py: 1,
+                      px: 2,
+                      borderRadius: "30px",
+                      bgcolor: "rgb(217 249 157)",
+                      boxShadow:
+                        "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+                    }}
+                  >
+                    {returnCodeToBr(log.content)}
+                  </Typography>
+                  <div className="mt-auto mb-3 text-xs">{log.time}</div>
+                </div>
+                <div className="w-1/3" />
+              </div>
+            )}
           </div>
-        )
-      )}
+        </>
+      ))}
       <div ref={scrollBottomRef} />
     </Box>
   );
