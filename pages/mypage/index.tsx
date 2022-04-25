@@ -58,7 +58,7 @@ export default function MyPage() {
           {user.email}
         </Typography>
         <Typography color={"primary"} align="center" variant="h5" mt={4}>
-          国
+          訪問した国
         </Typography>
         <Typography align="center" variant="h6">
           {user.countries &&

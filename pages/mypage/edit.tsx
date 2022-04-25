@@ -161,7 +161,13 @@ export default function ProfileEdit() {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <Box sx={{ width: "100%", display: "flex", justifyContent: "end" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                justifyItems: "end",
+              }}
+            >
               <Button onClick={() => changeName(name)}>保存する</Button>
             </Box>
           </Box>
