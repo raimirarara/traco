@@ -33,35 +33,23 @@ export default async function useMakeTimeLineList(): Promise<TimelineLists> {
 
   const q = query(
     collection(db, "timelines"),
-    orderBy("created_at", "asc"),
+    orderBy("created_at", "desc"),
     limit(10)
   );
   const querySnapshot = await getDocs(q);
 
   querySnapshot.forEach(async (doc) => {
-    // useGetUserData(doc.data().uid).then((user) => {
-    //   timelineList.push({
-    //     timelineId: doc.data().timelineId,
-    //     uid: user.uid,
-    //     username: user.username,
-    //     userImage: user.image,
-    //     timeline: {
-    //       content: doc.data().content,
-    //       images: doc.data().images,
-    //     },
-    //   });
-    // });
-
-    const data = await useGetUserData(doc.data().uid);
-    timelineList.push({
-      timelineId: doc.data().timelineId,
-      uid: data.uid,
-      username: data.username,
-      userImage: data.image,
-      timeline: {
-        content: doc.data().content,
-        images: doc.data().images,
-      },
+    useGetUserData(doc.data().uid).then((user) => {
+      timelineList.push({
+        timelineId: doc.data().timelineId,
+        uid: user.uid,
+        username: user.username,
+        userImage: user.image,
+        timeline: {
+          content: doc.data().content,
+          images: doc.data().images,
+        },
+      });
     });
   });
 
