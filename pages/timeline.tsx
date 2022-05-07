@@ -41,8 +41,11 @@ export default function Timeline() {
           }}
           timelineList={timelineList}
         />
-        <IconButton onClick={() => router.push("/post")}>
-          <AddCircleIcon color="primary" />
+        <IconButton
+          sx={{ position: "fixed", right: 2, bottom: 65 }}
+          onClick={() => router.push("/post")}
+        >
+          <AddCircleIcon sx={{ width: 45, height: 45 }} color="primary" />
         </IconButton>
       </Box>
       <div className="w-full fixed bottom-0">

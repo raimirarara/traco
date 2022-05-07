@@ -6,17 +6,13 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { TalkLists } from "../../hooks/useMakeTalkLists";
 import { useRouter } from "next/router";
-import { Button, IconButton, TextField } from "@mui/material";
-import ImageIcon from "@mui/icons-material/Image";
-import { Box } from "@mui/system";
-import { storage } from "../../firebase/firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useDispatch } from "react-redux";
-import useAddTimeLine from "../../hooks/useAddTimeline";
 import { TimelineLists } from "../../hooks/useMakeTimelineList";
 import Image from "next/image";
+import { Box } from "@mui/system";
+import useReturnCodeToBr from "../../hooks/useReturnCodeToBr";
+import useGetWindowSize from "../../hooks/useGetWindowSize";
 
 type Props = {
   currentUser: {
@@ -33,6 +29,7 @@ type Props = {
 export default function TimelineList(props: Props) {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { width, height } = useGetWindowSize();
 
   return (
     <List sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -44,31 +41,75 @@ export default function TimelineList(props: Props) {
             </ListItemAvatar>
 
             <ListItemText
-              primary={timelines.username}
+              primary={
+                <Box sx={{ display: "flex" }}>
+                  <Typography>{timelines.username}</Typography>
+                  <Typography
+                    sx={{ ml: "auto" }}
+                    variant="caption"
+                    display="block"
+                  >
+                    {(
+                      "0" +
+                      (timelines.created_at.toDate().getMonth() + 1)
+                    ).slice(-2) +
+                      "/" +
+                      ("0" + timelines.created_at.toDate().getDate()).slice(
+                        -2
+                      ) +
+                      " " +
+                      ("0" + timelines.created_at.toDate().getHours()).slice(
+                        -2
+                      ) +
+                      ":" +
+                      ("0" + timelines.created_at.toDate().getMinutes()).slice(
+                        -2
+                      )}
+                  </Typography>
+                </Box>
+              }
               secondary={
                 <React.Fragment>
                   <Typography
-                    sx={{ display: "inline" }}
-                    component="span"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      pr: "56px",
+                    }}
+                    textAlign={"center"}
                     variant="body2"
                     color="text.primary"
                   >
-                    {timelines.timeline.content}
+                    {useReturnCodeToBr(timelines.timeline.content)}
                   </Typography>
                   {/* {" — " + talkList.latestTalk.content} */}
                 </React.Fragment>
               }
             />
+          </ListItem>
+          <Box
+            sx={{
+              display: "row",
+            }}
+          >
             {timelines.timeline.images.length > 0 &&
               timelines.timeline.images.map((image) => (
-                <Image
-                  id={image.id}
-                  width={100}
-                  height={100}
-                  src={image.path}
-                />
+                <Box
+                  maxWidth={width / 2}
+                  mb={3}
+                  sx={{
+                    mx: "auto",
+                  }}
+                >
+                  <Image
+                    id={image.id}
+                    width={image.width ? image.width : 200}
+                    height={image.height ? image.height : 200}
+                    src={image.path}
+                  />
+                </Box>
               ))}
-          </ListItem>
+          </Box>
           <Divider variant="fullWidth" component="li" />
         </div>
       ))}

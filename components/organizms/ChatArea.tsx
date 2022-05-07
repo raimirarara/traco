@@ -2,8 +2,6 @@ import { Box } from "@mui/system";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { db } from "../../firebase/firebase";
 import firebase from "firebase/compat/app";
-import Image from "next/image";
-import PersonIcon from "@mui/icons-material/Person";
 import { PertnerUser } from "../../pages/chat/[chatRoomId]";
 import useGetWindowSize from "../../hooks/useGetWindowSize";
 import {
@@ -14,7 +12,7 @@ import {
   query,
 } from "firebase/firestore";
 import { Avatar, Typography } from "@mui/material";
-import HTMLReactParser from "html-react-parser";
+import useReturnCodeToBr from "../../hooks/useReturnCodeToBr";
 
 type Props = {
   currentUser: {
@@ -33,14 +31,6 @@ export default function ChatArea(props: Props) {
   const [logs, setLogs] = useState<firebase.firestore.DocumentData[]>([]);
   const scrollBottomRef = useRef<HTMLDivElement>(null);
   const { height, width } = useGetWindowSize();
-
-  const returnCodeToBr = (text: string) => {
-    if (text === "") {
-      return text;
-    } else {
-      return HTMLReactParser(text.replace(/\r?\n/g, "<br>"));
-    }
-  };
 
   const addLog = (id: string, data: any) => {
     const log = {
@@ -147,7 +137,7 @@ export default function ChatArea(props: Props) {
                         "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
                     }}
                   >
-                    {returnCodeToBr(log.content)}
+                    {useReturnCodeToBr(log.content)}
                   </Typography>
                 </div>
               </div>
@@ -175,7 +165,7 @@ export default function ChatArea(props: Props) {
                         "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
                     }}
                   >
-                    {returnCodeToBr(log.content)}
+                    {useReturnCodeToBr(log.content)}
                   </Typography>
                   <div className="mt-auto mb-3 text-xs">{log.time}</div>
                 </div>

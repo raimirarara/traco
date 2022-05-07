@@ -7,6 +7,8 @@ type Props = {
   images: {
     id: string;
     path: string;
+    width: number;
+    height: number;
   }[];
 };
 

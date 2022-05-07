@@ -7,15 +7,17 @@ import Avatar from "@mui/material/Avatar";
 import { useRouter } from "next/router";
 import { Button, IconButton, TextField } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
-import { Box } from "@mui/system";
+import { Box, height, width } from "@mui/system";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
+import NextImage from "next/image";
 import useAddTimeLine from "../hooks/useAddTimeline";
 import { getUser } from "../redux/slices/userSlice";
 import { storage } from "../firebase/firebase";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import useAddTimeline from "../hooks/useAddTimeline";
+import SimpleBottomNavigation from "../components/organizms/BottomNavigation";
+import useGetWindowSize from "../hooks/useGetWindowSize";
 
 export default function Post() {
   const router = useRouter();
@@ -23,37 +25,30 @@ export default function Post() {
   const user = useSelector(getUser).user;
   const [happenings, setHappenings] = React.useState("");
   const [filelist, setFileList] = React.useState<FileList>();
-  const [previews, setPreviews] = React.useState<string[]>([]);
+  const [previews, setPreviews] = React.useState<
+    { url: string; width: number; height: number }[]
+  >([]);
+  const { width, height } = useGetWindowSize();
 
-  const handleSubmit = async () => {
-    console.log(previews);
-    if (previews.length > 0) {
-      await uploadImage();
-    } else {
-      useAddTimeline({
-        uid: user.uid,
-        content: happenings,
-        images: [],
-      });
-    }
-  };
-
-  const previewImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files;
-    if (file) {
-      setFileList(file);
-      let urls: string[] = [];
-      Array.from(file).forEach((item) => {
-        urls.push(window.URL.createObjectURL(item));
-      });
-      setPreviews(urls);
-    }
+  // promise化したfunction
+  const loadImage = async (src: string) => {
+    return new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = (e) => reject(e);
+      img.src = src;
+    });
   };
 
   const uploadImage = async () => {
     if (filelist) {
-      let images: { id: string; path: string }[] = [];
-      Array.from(filelist).forEach(async (item) => {
+      let images: {
+        id: string;
+        path: string;
+        width: number;
+        height: number;
+      }[] = [];
+      Array.from(filelist).forEach(async (item, index) => {
         const blob = new Blob([item], {
           type: "image/jpeg",
         });
@@ -70,6 +65,8 @@ export default function Post() {
           images.push({
             id: fileName,
             path: await getDownloadURL(storageRef),
+            width: previews[index].width,
+            height: previews[index].height,
           });
         });
         if (images.length == previews.length) {
@@ -80,6 +77,39 @@ export default function Post() {
           });
         }
       });
+    }
+  };
+
+  const handleSubmit = async () => {
+    console.log(previews);
+    if (previews.length > 0) {
+      await uploadImage();
+    } else {
+      useAddTimeline({
+        uid: user.uid,
+        content: happenings,
+        images: [],
+      });
+    }
+    setHappenings("");
+    setPreviews([]);
+  };
+
+  const previewImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files;
+    if (file) {
+      setFileList(file);
+      let preImg: { url: string; width: number; height: number }[] = [];
+      Array.from(file).forEach((item) => {
+        loadImage(window.URL.createObjectURL(item)).then((res) => {
+          preImg.push({
+            url: window.URL.createObjectURL(item),
+            width: res.width,
+            height: res.height,
+          });
+        });
+      });
+      setTimeout(() => setPreviews(preImg), 300);
     }
   };
 
@@ -107,7 +137,19 @@ export default function Post() {
             />
             {previews.length > 0 &&
               previews.map((preview) => (
-                <Image width={100} height={100} src={preview} />
+                <Box
+                  maxWidth={width / 2}
+                  mb={3}
+                  sx={{
+                    mx: "auto",
+                  }}
+                >
+                  <NextImage
+                    width={preview.width}
+                    height={preview.height}
+                    src={preview.url}
+                  />
+                </Box>
               ))}
 
             <Box sx={{ display: "flex" }}>
@@ -128,6 +170,7 @@ export default function Post() {
               <Button
                 sx={{
                   borderRadius: "30px",
+                  ml: "auto",
                 }}
                 onClick={() => handleSubmit()}
               >
@@ -137,6 +180,9 @@ export default function Post() {
           </ListItemText>
         </ListItem>
       </List>
+      <div className="w-full fixed bottom-0">
+        <SimpleBottomNavigation />
+      </div>
     </Box>
   );
 }

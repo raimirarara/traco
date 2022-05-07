@@ -5,6 +5,7 @@ import {
   limit,
   orderBy,
   query,
+  Timestamp,
 } from "firebase/firestore";
 import { imageConfigDefault } from "next/dist/server/image-config";
 import { db } from "../firebase/firebase";
@@ -19,11 +20,14 @@ export type TimelineLists = {
     id: string;
     path: string;
   };
+  created_at: Timestamp;
   timeline: {
     content: string;
     images: {
       id: string;
       path: string;
+      width: number;
+      height: number;
     }[];
   };
 }[];
@@ -45,6 +49,7 @@ export default async function useMakeTimeLineList(): Promise<TimelineLists> {
         uid: user.uid,
         username: user.username,
         userImage: user.image,
+        created_at: doc.data().created_at,
         timeline: {
           content: doc.data().content,
           images: doc.data().images,
