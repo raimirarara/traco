@@ -14,8 +14,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import SimpleBottomNavigation from "../components/organizms/BottomNavigation";
-import styles from "../styles/Home.module.css";
-import GoogleMapReact from "google-map-react";
 import { useEffect, useState } from "react";
 import AsiaSouthEast from "../public/image/asiasoutheast.png";
 import CountryButton from "../components/organizms/CountryButton";
@@ -27,6 +25,7 @@ import { useRouter } from "next/router";
 import useMakeChatRoom from "../hooks/useMakeChatRoom";
 import useGetWindowSize from "../hooks/useGetWindowSize";
 import MessageIcon from "@mui/icons-material/Message";
+import All from "../public/image/map/all.jpg";
 
 const Home: NextPage = () => {
   //APIKEYは""としていれば開発者モードで使えます
