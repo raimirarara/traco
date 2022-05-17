@@ -94,6 +94,9 @@ export default function MenuListComposition() {
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
+                  <MenuItem onClick={() => router.push("/intro")}>
+                    Getting Started
+                  </MenuItem>
                   <MenuItem onClick={() => router.push("/mypage/edit")}>
                     Profile Edit
                   </MenuItem>
